@@ -105,8 +105,8 @@ personal portfolio website for a persian software engineer to show my abilities,
 **Per page use cases**
 
 - **Root page which is book cover**  
-  - Cover page should be hard book not like other project to fill hard fancy thick cover.  
-  - Cover should contain my image at its center and should be loaded from assets folder and uses nextjs image component.  
+  - Cover page should be hard book not like other project to fill hard fancy thick cover and its image should come from assets/images/cover-page.png
+  - Cover should contain my image at its center and should be loaded from assets folder and uses nextjs image component which is assets/images/me.jpg.  
   - Cover should contain title as: A Persian Engineer and its font should be Cormorant.
 
 - **Who is he page**  

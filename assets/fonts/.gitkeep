@@ -1,0 +1,19 @@
+# Fonts Directory
+
+Please download and add the following fonts here:
+
+1. **Cormorant** - Variable Font
+   - File: Cormorant-VariableFont_wght.ttf
+   - Download from: https://fonts.google.com/specimen/Cormorant
+
+2. **EB Garamond** - Variable Font
+   - File: EBGaramond-VariableFont_wght.ttf
+   - Download from: https://fonts.google.com/specimen/EB+Garamond
+
+## How to download:
+1. Go to Google Fonts
+2. Click "Download family"
+3. Extract the zip file
+4. Copy the variable font files (.ttf) to this directory
+5. Ensure the filenames match those in app/layout.tsx
+
