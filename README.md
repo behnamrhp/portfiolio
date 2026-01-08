@@ -1,4 +1,4 @@
-# Persian Engineer Portfolio
+# A Personal Portfolio
 
 A personal portfolio website with a Persian ancient book theme, built with Next.js, TypeScript, and Tailwind CSS.
 
