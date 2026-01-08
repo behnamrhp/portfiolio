@@ -21,6 +21,30 @@ const config: Config = {
         cormorant: ['var(--font-cormorant)', 'serif'],
         garamond: ['var(--font-garamond)', 'serif'],
       },
+      // Custom breakpoints for book layout
+      screens: {
+        'xs': '475px',
+        // sm: '640px', (default)
+        // md: '768px', (default)
+        // lg: '1024px', (default) - Double page book starts here
+        // xl: '1280px', (default)
+        '2xl': '1536px',
+      },
+      // Custom spacing for book elements
+      spacing: {
+        'book-sm': '90vh',
+        'book-md': '95vh',
+      },
+      // Custom border radius matching the small borders requirement
+      borderRadius: {
+        'manuscript': '2px',
+      },
+      // Line clamp utilities for text truncation
+      lineClamp: {
+        1: '1',
+        2: '2',
+        3: '3',
+      },
     },
   },
   plugins: [],

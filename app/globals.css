@@ -26,5 +26,49 @@ html {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  scroll-behavior: smooth;
+}
+
+/* Custom utility classes */
+@layer utilities {
+  /* Line clamping utilities */
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  /* Custom scrollbar for book content */
+  .scrollbar-manuscript::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .scrollbar-manuscript::-webkit-scrollbar-track {
+    background: #EFE3C6;
+  }
+  
+  .scrollbar-manuscript::-webkit-scrollbar-thumb {
+    background: #1F1B17;
+    border-radius: 2px;
+  }
+  
+  .scrollbar-manuscript::-webkit-scrollbar-thumb:hover {
+    background: #1F4E79;
+  }
 }
 
