@@ -36,7 +36,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
             </BodyText>
           )}
           
-          <Divider style="ornamental" className="mt-4" />
+          <Divider dividerStyle="ornamental" className="mt-4" />
         </div>
       )}
       

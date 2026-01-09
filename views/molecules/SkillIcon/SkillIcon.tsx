@@ -1,4 +1,3 @@
-'use client';
 
 import React, { useEffect, useRef } from 'react';
 import { SkillIconProps } from './SkillIcon.types';
@@ -14,8 +13,6 @@ const SkillIcon: React.FC<SkillIconProps> = ({
   const iconRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
-    // All-drag library integration will be added here
-    // For now, we'll use native HTML5 drag and drop
     if (isDraggable && iconRef.current) {
       const element = iconRef.current;
       let initialX = 0;
@@ -64,7 +61,6 @@ const SkillIcon: React.FC<SkillIconProps> = ({
   }, [isDraggable]);
   
   const handleClick = (e: React.MouseEvent) => {
-    // Prevent link navigation when dragging
     if (e.defaultPrevented) return;
     window.open(skill.documentLink, '_blank', 'noopener,noreferrer');
   };

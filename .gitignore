@@ -8,12 +8,14 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
-
 # production
 /build
+/dist
+
+# vite
+dist/
+dist-ssr/
+*.local
 
 # misc
 .DS_Store

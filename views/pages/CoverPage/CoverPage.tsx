@@ -1,4 +1,3 @@
-'use client';
 
 import React from 'react';
 import { Heading } from '../../atoms/Typography';
@@ -25,16 +24,13 @@ const CoverPage: React.FC = () => {
         {/* Personal Image */}
         <div className="relative">
           <div className="w-48 h-48 md:w-64 md:h-64 rounded-full border-4 border-manuscript-lapis shadow-lg overflow-hidden bg-manuscript-ink">
-            {/* Placeholder for personal image */}
-            <div className="w-full h-full flex items-center justify-center">
-              <ImageWrapper
-                src="/assets/images/me.jpeg"
-                alt="Behnam Rahimpour"
-                width={256}
-                height={256}
-                className="object-cover"
-              />
-            </div>
+            {/* Personal image */}
+            <ImageWrapper
+              src="/assets/images/me.jpeg"
+              alt="Behnam Rahimpour"
+              aspectRatio="1:1"
+              className="w-full h-full object-cover"
+            />
           </div>
           {/* Decorative ring */}
           <div className="absolute -inset-2 border-2 border-manuscript-lapis rounded-full opacity-30" />
@@ -76,7 +72,7 @@ const CoverPage: React.FC = () => {
       {/* Hint to navigate */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center">
         <p className="font-garamond text-manuscript-ink opacity-40 text-sm animate-pulse">
-          Scroll or press → to begin
+          Press → to begin
         </p>
       </div>
     </div>

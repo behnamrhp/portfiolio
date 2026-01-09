@@ -5,13 +5,31 @@ This document breaks down the Persian Ancient Book-themed portfolio website into
 
 ---
 
-## Phase 1: Project Foundation & Setup ✅ COMPLETE
-**Goal**: Set up the Next.js project with all necessary configurations, dependencies, and core architecture.
+## ⚠️ Migration Notice: Next.js → React + React Router
+
+**Status**: Project is being migrated from Next.js SSG to React with React Router for more flexibility in page navigation and URL updates without page refresh.
+
+### Tasks Requiring Updates:
+- **Phase 1.1**: Initialize React project with React Router (instead of Next.js)
+- **Phase 3.2**: Implement routing with React Router (instead of Next.js Router)
+- **Phase 8.1**: Configure React build for GitHub Pages (instead of Next.js export)
+
+### What Needs to Change:
+1. Replace Next.js App Router with React Router
+2. Update routing hooks to use React Router's `useNavigate` and `useLocation`
+3. Update build configuration for React (instead of Next.js static export)
+4. Update image components to use standard img tags or React image libraries
+5. Update GitHub Actions workflow for React build process
+
+---
+
+## Phase 1: Project Foundation & Setup ⚠️ NEEDS UPDATE
+**Goal**: Set up the React project with React Router and all necessary configurations, dependencies, and core architecture.
 
 ### Tasks:
-- [x] **1.1 Initialize Next.js Project** ✅
-  - Create Next.js project with TypeScript
-  - Configure for SSG (Static Site Generation)
+- [ ] **1.1 Initialize React Project** ⚠️ NEEDS UPDATE
+  - Create React project with TypeScript
+  - Install and configure React Router for client-side routing
   - Set up project folder structure following MVVM + Atomic Design
 
 - [x] **1.2 Install Core Dependencies** ✅
@@ -23,7 +41,7 @@ This document breaks down the Persian Ancient Book-themed portfolio website into
 - [x] **1.3 Configure Fonts** ✅
   - Download and add Cormorant font to assets
   - Download and add EB Garamond font to assets
-  - Configure Next.js font loading (local fonts, no dynamic loading)
+  - Configure local font loading (no dynamic loading)
 
 - [x] **1.4 Set Up Color Palette** ✅
   - Create Tailwind theme configuration with Persian palette:
@@ -58,7 +76,7 @@ This document breaks down the Persian Ancient Book-themed portfolio website into
 - [x] **2.1 Create Atomic Components (Atoms)** ✅
   - Button component with ancient Persian style
   - Text components (headings, body text)
-  - Image wrapper component (Next.js Image)
+  - Image wrapper component (standard img with optimization)
   - Border/ornamental line components
   - Loading skeleton component
 
@@ -92,10 +110,12 @@ This document breaks down the Persian Ancient Book-themed portfolio website into
   - Implemented CSS 3D animations
   - Added direction tracking and animation states
 
-- [x] **3.2 Implement Page Routing** ✅
+- [x] **3.2 Implement Page Routing with window.history API** ✅
+  - Implemented URL management using window.history.pushState()
   - Created routing system where each page = URL path
-  - Implemented path changes without page refresh
-  - Set up proper page-to-route mapping with Next.js
+  - Implemented path changes without page refresh (no React Router re-renders)
+  - Set up proper page-to-route mapping
+  - Configured browser history for back/forward navigation via popstate events
 
 - [x] **3.3 Page Turn Interactions** ✅
   - Implemented scroll-based page turning
@@ -121,11 +141,11 @@ This document breaks down the Persian Ancient Book-themed portfolio website into
 **Goal**: Implement the book cover and "Who is he?" page with all content and styling.
 
 ### Tasks:
-- [x] **4.1 Book Cover Page** ✅
+- [x] **4.1 Book Cover Page** ✅ MIGRATED
   - Create hard cover design (thick, fancy)
   - Add personal image at center
   - Add title: "A Persian Engineer" (Cormorant font)
-  - Optimize image with Next.js Image component
+  - Uses ImageWrapper component (migrated - standard img tag)
   - Set as root path (/)
 
 - [x] **4.2 "Who is he?" Page - Content** ✅
@@ -231,24 +251,25 @@ This document breaks down the Persian Ancient Book-themed portfolio website into
 
 - [x] **7.4 Articles Page Assembly** ✅
   - Assembled full articles page
-  - Client-side fetching (not SSG)
+  - Client-side fetching (React-based)
   - Made article rows clickable (open in new tab)
   - All states working (loading, error, success)
 
 ---
 
-## Phase 8: GitHub Pages Deployment ✅ COMPLETE
+## Phase 8: GitHub Pages Deployment ⚠️ NEEDS UPDATE
 **Goal**: Configure project for GitHub Pages deployment with automated workflows.
 
 ### Tasks:
-- [x] **8.1 Next.js Configuration for GitHub Pages** ✅
-  - Already configured in next.config.js for static export
-  - Output set to 'export'
-  - Images unoptimized for GitHub Pages
+- [ ] **8.1 React Build Configuration for GitHub Pages** ⚠️ NEEDS UPDATE
+  - Configure React build for static export
+  - Set up build script for production
+  - Configure base path for GitHub Pages if needed
+  - Ensure all assets are properly included in build
 
 - [x] **8.2 Create GitHub Actions Workflow** ✅
   - Created .github/workflows/deploy.yml
-  - Set up build job
+  - Set up build job (needs update for React)
   - Set up deployment to GitHub Pages
   - Configured triggers (push to main)
 

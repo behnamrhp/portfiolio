@@ -37,10 +37,9 @@ export async function fetchArticles(
           'Content-Type': 'application/json',
           // API key is optional for public articles
           ...(process.env.NEXT_PUBLIC_ARTICLE_API_KEY && {
-            'api-key': process.env.NEXT_PUBLIC_ARTICLE_API_KEY,
+            'api-key': import.meta.env.VITE_ARTICLE_API_KEY,
           }),
         },
-        next: { revalidate: 0 }, // Always fetch fresh data
       }
     );
     

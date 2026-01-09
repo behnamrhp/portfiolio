@@ -1,26 +1,31 @@
 /* Turn.js Required Styles */
 
+.flipBook,
 .flipbook {
   position: relative;
   margin: 0 auto;
 }
 
+.flipBook .page,
 .flipbook .page {
-  width: 100%;
-  height: 100%;
+  /* Turn.js sets width/height dynamically based on display mode */
+  /* Turn.js adds float: left and manages positioning */
   background-color: #EFE3C6;
   line-height: 1.6;
   font-size: 16px;
-  display: flex;
-  flex-direction: column;
+  /* Let turn.js handle layout - it uses float: left internally */
+  box-sizing: border-box;
 }
 
+.flipBook .page img,
 .flipbook .page img {
   max-width: 100%;
   height: auto;
 }
 
 /* Turn.js Shadow Effects */
+.flipBook .even,
+.flipBook .odd,
 .flipbook .even,
 .flipbook .odd {
   background-image: linear-gradient(
@@ -30,6 +35,7 @@
   );
 }
 
+.flipBook .odd,
 .flipbook .odd {
   background-image: linear-gradient(
     to left,
@@ -39,21 +45,33 @@
 }
 
 /* Page turning gradient */
+.flipBook .turn-page,
 .flipbook .turn-page {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
 /* Hard cover effect for first and last pages */
-.flipbook .hard {
+/* Note: This should only apply to cover pages, not all pages */
+.flipBook .page.hard,
+.flipbook .page.hard {
   background: #1f1b17;
   border: 4px solid #1f4e79;
 }
 
+/* Regular pages (non-hard) should use manuscript paper color */
+.flipBook .page:not(.hard),
+.flipbook .page:not(.hard) {
+  background-color: #EFE3C6;
+  border: 4px solid #1f4e79;
+}
+
 /* Prevent text selection during page turn */
+.flipBook.grabbing,
 .flipbook.grabbing {
   cursor: grabbing !important;
 }
 
+.flipBook.grabbing *,
 .flipbook.grabbing * {
   user-select: none;
   -webkit-user-select: none;
@@ -62,16 +80,19 @@
 }
 
 /* Page corners hover effect */
+.flipBook .page,
 .flipbook .page {
   cursor: grab;
 }
 
+.flipBook .page:active,
 .flipbook .page:active {
   cursor: grabbing;
 }
 
 /* Responsive adjustments */
 @media (max-width: 1024px) {
+  .flipBook .page,
   .flipbook .page {
     font-size: 14px;
     padding: 1rem;
@@ -79,18 +100,19 @@
 }
 
 @media (max-width: 768px) {
+  .flipBook .page,
   .flipbook .page {
     font-size: 12px;
     padding: 0.75rem;
   }
 }
 
-/* Ensure turn.js wrapper has proper positioning */
-.flipbook > * {
-  position: absolute;
-}
+/* Turn.js creates page-wrapper divs internally with position: absolute */
+/* Don't set position on direct children - let turn.js handle it */
+/* The page-wrapper divs are created by turn.js and have position: absolute */
 
 /* Loading state */
+.flipBook.loading,
 .flipbook.loading {
   opacity: 0.5;
   pointer-events: none;

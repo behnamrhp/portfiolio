@@ -1,4 +1,3 @@
-'use client';
 
 import React from 'react';
 import { BookContainerProps } from './BookContainer.types';
@@ -25,7 +24,6 @@ const BookContainer: React.FC<BookContainerProps> = ({
     canGoPrevious,
   } = useBookNavigation({
     pages: pages.map((p) => ({ id: p.id, title: p.title, path: p.path })),
-    enableScroll: true,
     enableKeyboard: true,
   });
 
@@ -121,13 +119,11 @@ const BookContainer: React.FC<BookContainerProps> = ({
           disabled={!canGoNext}
         />
 
-        {/* Page Content Area */}
+        {/* Page Content Area - Dynamically render based on current page */}
         <div className={contentClassName}>
-          {children || (
-            <div className="font-garamond text-manuscript-ink">
-              {pages[currentPage]?.content}
-            </div>
-          )}
+          <div className="font-garamond text-manuscript-ink h-full">
+            {pages[currentPage]?.content}
+          </div>
         </div>
       </div>
 
@@ -138,7 +134,7 @@ const BookContainer: React.FC<BookContainerProps> = ({
 
       {/* Instructions hint (can be removed later) */}
       <div className="absolute top-6 left-1/2 transform -translate-x-1/2 font-garamond text-manuscript-ink opacity-40 text-xs text-center z-10">
-        Use ← → keys, scroll, or click arrows to navigate
+        Use ← → keys or click arrows to navigate
       </div>
     </div>
   );

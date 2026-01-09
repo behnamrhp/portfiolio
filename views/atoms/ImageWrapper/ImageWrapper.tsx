@@ -1,5 +1,4 @@
-import React from 'react';
-import Image from 'next/image';
+import React, { useState } from 'react';
 import { ImageWrapperProps } from './ImageWrapper.types';
 
 const ImageWrapper: React.FC<ImageWrapperProps> = ({
@@ -9,8 +8,13 @@ const ImageWrapper: React.FC<ImageWrapperProps> = ({
   bordered = false,
   aspectRatio,
   className = '',
+  width,
+  height,
   ...props
 }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+  
   const roundedClass = rounded ? 'rounded-sm' : '';
   const borderedClass = bordered ? 'border border-manuscript-ink' : '';
   
@@ -24,22 +28,70 @@ const ImageWrapper: React.FC<ImageWrapperProps> = ({
   const aspectClass = aspectRatio ? aspectRatioClasses[aspectRatio] : '';
   
   const combinedClassName = `
-    relative
     ${roundedClass}
     ${borderedClass}
     ${aspectClass}
     ${className}
   `.trim();
   
+  const handleLoad = () => {
+    setIsLoading(false);
+  };
+  
+  const handleError = () => {
+    setIsLoading(false);
+    setHasError(true);
+  };
+  
+  // If aspect ratio is specified, use container approach
+  if (aspectRatio) {
+    return (
+      <div className={`relative ${combinedClassName}`}>
+        {isLoading && !hasError && (
+          <div className="absolute inset-0 bg-manuscript-paper animate-pulse" />
+        )}
+        {hasError ? (
+          <div className="absolute inset-0 flex items-center justify-center bg-manuscript-paper text-manuscript-ink">
+            <span className="text-sm">Image not found</span>
+          </div>
+        ) : (
+          <img
+            src={src}
+            alt={alt}
+            onLoad={handleLoad}
+            onError={handleError}
+            className={`w-full h-full object-cover ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity`}
+            loading="lazy"
+            {...props}
+          />
+        )}
+      </div>
+    );
+  }
+  
+  // Standard image without aspect ratio container
   return (
     <div className={combinedClassName}>
-      <Image
-        src={src}
-        alt={alt}
-        fill={aspectRatio ? true : false}
-        className={aspectRatio ? 'object-cover' : ''}
-        {...props}
-      />
+      {isLoading && !hasError && (
+        <div className="w-full h-full bg-manuscript-paper animate-pulse" />
+      )}
+      {hasError ? (
+        <div className="flex items-center justify-center bg-manuscript-paper text-manuscript-ink p-4">
+          <span className="text-sm">Image not found</span>
+        </div>
+      ) : (
+        <img
+          src={src}
+          alt={alt}
+          width={width}
+          height={height}
+          onLoad={handleLoad}
+          onError={handleError}
+          className={`${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity`}
+          loading="lazy"
+          {...props}
+        />
+      )}
     </div>
   );
 };

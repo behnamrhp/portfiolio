@@ -1,4 +1,3 @@
-'use client';
 
 import React from 'react';
 import { Heading, BodyText } from '../../atoms/Typography';
@@ -21,7 +20,7 @@ const SkillsPage: React.FC = () => {
           </BodyText>
         </div>
         
-        <Divider style="ornamental" />
+        <Divider dividerStyle="ornamental" />
         
         {/* Software Engineering Principles - Text Only */}
         <section>

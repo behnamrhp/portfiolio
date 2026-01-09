@@ -1,0 +1,19 @@
+
+/* Cormorant Variable Font */
+@font-face {
+  font-family: 'Cormorant';
+  src: url('/assets/fonts/Cormorant-VariableFont_wght.woff2') format('woff2');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* EB Garamond Variable Font - woff2 format */
+@font-face {
+  font-family: 'EB Garamond';
+  src: url('/assets/fonts/EBGaramond-VariableFont_wght.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+

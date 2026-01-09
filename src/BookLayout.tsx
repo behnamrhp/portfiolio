@@ -1,6 +1,3 @@
-'use client';
-
-import React from 'react';
 import { BookContainer } from '@/views/organisms';
 import {
   CoverPage,
@@ -11,7 +8,13 @@ import {
 } from '@/views/pages';
 import { ROUTES } from '@/input/constants';
 
-export default function SkillsPageRoute() {
+/**
+ * BookLayout component that wraps all book pages
+ * Defines all pages with their components for dynamic rendering
+ */
+export function BookLayout() {
+  // Define all pages with their components
+  // Pages are rendered dynamically based on current page index
   const pages = [
     {
       id: 'cover',
@@ -45,5 +48,6 @@ export default function SkillsPageRoute() {
     },
   ];
 
-  return <BookContainer pages={pages} currentPage={2} />;
+  return <BookContainer pages={pages} />;
 }
+

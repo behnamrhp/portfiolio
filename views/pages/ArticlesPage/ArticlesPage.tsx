@@ -1,4 +1,3 @@
-'use client';
 
 import React from 'react';
 import { Heading, BodyText } from '../../atoms/Typography';

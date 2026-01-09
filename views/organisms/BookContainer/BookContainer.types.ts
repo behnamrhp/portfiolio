@@ -3,7 +3,7 @@ import { ReactNode, HTMLAttributes } from 'react';
 export interface BookPage {
   id: string;
   title: string;
-  content: ReactNode;
+  content?: ReactNode;
   path: string;
 }
 

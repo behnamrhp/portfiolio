@@ -1,6 +1,6 @@
 import React from 'react';
-import Link from 'next/link';
 import { LinkTextProps } from './Typography.types';
+import { ROUTES } from '@/input/constants';
 
 const LinkText: React.FC<LinkTextProps> = ({
   children,
@@ -28,13 +28,29 @@ const LinkText: React.FC<LinkTextProps> = ({
     ${className}
   `.trim();
   
-  if (external) {
+  const isInternalRoute = Object.values(ROUTES).includes(href as any);
+  
+  const handleInternalClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (external || !isInternalRoute) return;
+    
+    e.preventDefault();
+    
+    window.history.pushState(
+      { path: href },
+      '',
+      href
+    );
+    
+    window.dispatchEvent(new CustomEvent('navigate', { detail: { path: href } }));
+  };
+  
+  if (external || !isInternalRoute) {
     return (
       <a
         href={href}
         className={combinedClassName}
-        target="_blank"
-        rel="noopener noreferrer"
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noopener noreferrer' : undefined}
         {...props}
       >
         {children}
@@ -43,9 +59,14 @@ const LinkText: React.FC<LinkTextProps> = ({
   }
   
   return (
-    <Link href={href} className={combinedClassName} {...props}>
+    <a
+      href={href}
+      className={combinedClassName}
+      onClick={handleInternalClick}
+      {...props}
+    >
       {children}
-    </Link>
+    </a>
   );
 };
 

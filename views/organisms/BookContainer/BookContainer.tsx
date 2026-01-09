@@ -1,14 +1,10 @@
-'use client';
-
 import React, { useEffect, useRef, useState } from 'react';
 import { BookContainerProps } from './BookContainer.types';
 import Bookmark from '../../molecules/Bookmark';
 import NavigationArrow from '../../molecules/NavigationArrow';
-import { getResponsiveTurnConfig } from '@/input/turnConfig';
-
-// Dynamic imports for jQuery and turn.js (client-side only)
-let $: any;
-let turnInitialized = false;
+import { getResponsiveTurnConfig, isMobile, getBookWidth, getBookHeight } from '@/input';
+import $ from 'jquery';
+import '../../../src/lib/turn.js';
 
 const BookContainer: React.FC<BookContainerProps> = ({
   pages,
@@ -19,152 +15,175 @@ const BookContainer: React.FC<BookContainerProps> = ({
   ...props
 }) => {
   const flipBookRef = useRef<HTMLDivElement>(null);
-  const [currentPage, setCurrentPage] = useState(controlledPage);
-  const [isBookLoaded, setIsBookLoaded] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const turnInstanceRef = useRef<any>(null);
-
-  // Detect mobile
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024);
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  // Load jQuery and turn.js
-  useEffect(() => {
-    const loadLibraries = async () => {
-      if (typeof window === 'undefined') return;
-
-      try {
-        // Load jQuery
-        const jquery = await import('jquery');
-        $ = jquery.default;
-        (window as any).$ = $;
-        (window as any).jQuery = $;
-
-        // Load turn.js using script tag (turn.js needs to be loaded this way to extend jQuery)
-        if (!turnInitialized) {
-          await new Promise<void>((resolve, reject) => {
-            // Check if turn.js is already loaded
-            if (($ as any)().turn) {
-              turnInitialized = true;
-              resolve();
-              return;
-            }
-
-            const script = document.createElement('script');
-            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.2/turn.min.js';
-            script.async = true;
-            script.onload = () => {
-              turnInitialized = true;
-              resolve();
-            };
-            script.onerror = () => {
-              reject(new Error('Failed to load turn.js'));
-            };
-            document.head.appendChild(script);
-          });
-        }
-
-        setIsBookLoaded(true);
-      } catch (error) {
-        console.error('Error loading libraries:', error);
-      }
-    };
-
-    loadLibraries();
-  }, []);
+  const [currentPage, setCurrentPage] = useState(controlledPage ?? 0);
+  const turnInstanceRef = useRef<JQuery | null>(null);
 
   // Initialize turn.js
   useEffect(() => {
-    if (!isBookLoaded || !flipBookRef.current || !$ || !pages.length) return;
-
-    const $flipBook = $(flipBookRef.current);
-
-    // Turn.js options
-    const options = {
-      ...getResponsiveTurnConfig(isMobile),
-      pages: pages.length,
-      when: {
-        turning: (event: Event, page: number, pageObject: any) => {
-          setCurrentPage(page - 1); // turn.js uses 1-based indexing
-          if (onPageChange) {
-            onPageChange(page - 1);
-          }
-        },
-        turned: (event: Event, page: number) => {
-          // Page turn animation completed
-        },
-        start: (event: Event, pageObject: any, corner: string) => {
-          // Allow page turning
-        },
-      },
-    };
-
-    // Initialize turn.js
-    $flipBook.turn(options);
-    turnInstanceRef.current = $flipBook;
-
-    // Set initial page
-    if (controlledPage > 0) {
-      $flipBook.turn('page', controlledPage + 1);
+    if (!pages.length) {
+      return;
     }
 
-    // Cleanup
+    const initTurn = () => {
+      if (!flipBookRef.current) {
+        requestAnimationFrame(initTurn);
+        return;
+      }
+
+      const $flipBook = $(flipBookRef.current);
+
+      if (typeof $flipBook.turn !== 'function') {
+        return;
+      }
+
+      const options: TurnJs.TurnOptions = {
+        pages: pages.length,
+        ...getResponsiveTurnConfig(),
+        when: {
+          turning: (_event, page) => {
+            setCurrentPage(page - 1);
+            if (onPageChange) {
+              onPageChange(page - 1);
+            }
+          },
+          start: (_event, _pageObject, _corner) => {
+            // Allow page turning
+          },
+        },
+      };
+
+      turnInstanceRef.current = $flipBook;
+      $flipBook.turn(options);
+    };
+
+    const rafId = requestAnimationFrame(initTurn);
+
     return () => {
-      if ($flipBook.turn) {
+      cancelAnimationFrame(rafId);
+      if (turnInstanceRef.current && typeof turnInstanceRef.current.turn === 'function') {
         try {
-          $flipBook.turn('destroy');
+          turnInstanceRef.current.turn('destroy');
         } catch (e) {
           // Ignore errors on cleanup
         }
       }
     };
-  }, [isBookLoaded, pages.length, isMobile]);
+  }, [pages.length, onPageChange, controlledPage]);
 
   // Handle controlled page changes
   useEffect(() => {
-    if (
-      !turnInstanceRef.current ||
-      controlledPage === undefined ||
-      !isBookLoaded
-    )
-      return;
+    if (!turnInstanceRef.current || controlledPage === undefined) return;
 
     const $flipBook = turnInstanceRef.current;
-    const currentTurnPage = $flipBook.turn('page');
+    
+    try {
+      const totalPages = $flipBook.turn('pages') as number;
+      if (totalPages === 0) {
+        return;
+      }
 
-    if (currentTurnPage - 1 !== controlledPage) {
-      $flipBook.turn('page', controlledPage + 1);
+      const currentTurnPage = $flipBook.turn('page') as number;
+
+      if (currentTurnPage - 1 !== controlledPage && controlledPage >= 0 && controlledPage < totalPages) {
+        $flipBook.turn('page', controlledPage + 1);
+      }
+    } catch (e) {
+      console.warn('Error changing page:', e);
     }
-  }, [controlledPage, isBookLoaded]);
+  }, [controlledPage]);
 
-  // Navigation functions
   const goToPage = (pageIndex: number) => {
-    if (turnInstanceRef.current && pageIndex >= 0 && pageIndex < pages.length) {
-      turnInstanceRef.current.turn('page', pageIndex + 1);
+    if (!turnInstanceRef.current) return;
+    
+    try {
+      if (pageIndex < 0 || pageIndex >= pages.length) return;
+      
+      const totalPages = turnInstanceRef.current.turn('pages') as number;
+      if (!totalPages || totalPages === 0) return;
+      
+      const targetPage = pageIndex + 1;
+      if (targetPage < 1 || targetPage > totalPages) return;
+      
+      turnInstanceRef.current.turn('page', targetPage);
+    } catch (e) {
+      console.warn('Error in goToPage:', e);
     }
   };
 
   const nextPage = () => {
-    if (turnInstanceRef.current && currentPage < pages.length - 1) {
-      turnInstanceRef.current.turn('next');
+    if (!turnInstanceRef.current) return;
+    
+    try {
+      const totalPages = turnInstanceRef.current.turn('pages') as number;
+      if (!totalPages || totalPages === 0) return;
+      
+      let currentTurnPage = turnInstanceRef.current.turn('page') as number;
+      
+      if (!currentTurnPage || isNaN(currentTurnPage) || currentTurnPage < 1) {
+        currentTurnPage = currentPage + 1; // Convert 0-based to 1-based
+      }
+      
+      if (isNaN(currentTurnPage) || currentTurnPage < 1 || currentTurnPage > totalPages) {
+        console.warn('Invalid page number:', currentTurnPage);
+        return;
+      }
+      
+      const isDouble = !isMobile();
+      let nextPageNum: number;
+      
+      if (isDouble) {
+        const view = turnInstanceRef.current.turn('view', currentTurnPage) as TurnJs.View;
+        const lastPageInView = view[1] || view[0] || currentTurnPage;
+        nextPageNum = Math.min(totalPages, lastPageInView + 1);
+      } else {
+        nextPageNum = Math.min(totalPages, currentTurnPage + 1);
+      }
+      
+      if (nextPageNum > currentTurnPage && nextPageNum <= totalPages && !isNaN(nextPageNum)) {
+        turnInstanceRef.current.turn('page', nextPageNum);
+      }
+    } catch (e) {
+      console.warn('Error in nextPage:', e);
     }
   };
 
   const previousPage = () => {
-    if (turnInstanceRef.current && currentPage > 0) {
-      turnInstanceRef.current.turn('previous');
+    if (!turnInstanceRef.current) return;
+    
+    try {
+      const totalPages = turnInstanceRef.current.turn('pages') as number;
+      if (!totalPages || totalPages === 0) return;
+      
+      let currentTurnPage = turnInstanceRef.current.turn('page') as number;
+      
+      if (!currentTurnPage || isNaN(currentTurnPage) || currentTurnPage < 1) {
+        currentTurnPage = currentPage + 1; // Convert 0-based to 1-based
+      }
+      
+      if (isNaN(currentTurnPage) || currentTurnPage < 1 || currentTurnPage > totalPages) {
+        console.warn('Invalid page number:', currentTurnPage);
+        return;
+      }
+      
+      const isDouble = !isMobile();
+      let prevPageNum: number;
+      
+      if (isDouble) {
+        const view = turnInstanceRef.current.turn('view', currentTurnPage) as TurnJs.View;
+        const firstPageInView = view[0] || currentTurnPage;
+        prevPageNum = Math.max(1, firstPageInView - 1);
+      } else {
+        prevPageNum = Math.max(1, currentTurnPage - 1);
+      }
+      
+      if (prevPageNum < currentTurnPage && prevPageNum >= 1 && !isNaN(prevPageNum)) {
+        turnInstanceRef.current.turn('page', prevPageNum);
+      }
+    } catch (e) {
+      console.warn('Error in previousPage:', e);
     }
   };
 
-  // Calculate bookmark positions
   const getBookmarkPosition = (index: number) => {
     const bookmarkWidth = 100;
     const overlap = 20;
@@ -221,27 +240,27 @@ const BookContainer: React.FC<BookContainerProps> = ({
         />
 
         {/* FlipBook - turn.js container */}
+        {/* Use 'flipBook' class to match whiteboard tool pattern */}
         <div
           ref={flipBookRef}
-          className="flipbook shadow-2xl"
+          className="flipBook shadow-2xl"
           style={{
-            width: isMobile
-              ? (typeof window !== 'undefined' ? window.innerWidth * 0.95 : 400)
-              : (typeof window !== 'undefined' ? Math.min(window.innerWidth * 0.9, 1400) : 1400),
-            height: typeof window !== 'undefined' ? Math.min(window.innerHeight * 0.85, 900) : 900,
+            width: getBookWidth(),
+            height: getBookHeight(),
           }}
         >
-          {pages.map((page, index) => (
-            <div
-              key={page.id}
-              className="page bg-manuscript-paper border-4 border-manuscript-ink overflow-y-auto overflow-x-hidden p-6 md:p-8 lg:p-12 scrollbar-manuscript"
-              data-page-number={index + 1}
-            >
-              <div className="font-garamond text-manuscript-ink h-full">
-                {children || page.content}
+          {pages.map((page, index) => {
+            return (
+              <div
+                key={page.id}
+                className={`page p${index + 1} ${index === 0 ? 'hard' : ''}`}
+              >
+                <div className="font-garamond text-manuscript-ink h-full overflow-auto p-6 md:p-8 lg:p-12">
+                  {children || page.content}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

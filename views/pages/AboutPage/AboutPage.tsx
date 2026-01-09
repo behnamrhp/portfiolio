@@ -1,7 +1,6 @@
-'use client';
 
 import React from 'react';
-import { Heading, BodyText, LinkText } from '../../atoms/Typography';
+import { Heading, BodyText } from '../../atoms/Typography';
 import Divider from '../../atoms/Divider';
 import Button from '../../atoms/Button';
 import PageLayout from '../../organisms/PageLayout';
@@ -33,7 +32,7 @@ const AboutPage: React.FC = () => {
           </BodyText>
         </section>
         
-        <Divider style="ornamental" />
+        <Divider dividerStyle="ornamental" />
         
         {/* Which parts can he help you with? Section */}
         <section>

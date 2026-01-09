@@ -40,17 +40,19 @@ Phase 4 - Page Implementation (Cover & About) has been successfully completed. T
 
 ---
 
-### 4.2 Personal Image Placeholder ✅
+### 4.2 Personal Image Placeholder ✅ MIGRATED
 
 **Image Setup**
 
 #### Implementation:
 - ✅ Created placeholder structure
-- ✅ Next.js Image component
+- ✅ ImageWrapper component (migrated - uses standard img tag) ✅
 - ✅ Circular frame (256x256px)
 - ✅ Lapis blue border
 - ✅ Shadow effects
 - ✅ Instructions for adding real image
+
+**✅ Migration Complete**: ImageWrapper component uses standard `img` tag with lazy loading and error handling.
 
 #### Image Specifications:
 - **Location**: `/public/assets/images/`
@@ -141,28 +143,28 @@ Phase 4 - Page Implementation (Cover & About) has been successfully completed. T
 
 ---
 
-### 4.6 App Integration ✅
+### 4.6 App Integration ✅ MIGRATED
 
-**BookContainer Integration**
+**BookLayout Integration**
 
-#### Main App (`app/page.tsx`):
-- ✅ Integrated BookContainer
-- ✅ Added Cover page
-- ✅ Added About page
-- ✅ Proper routing setup
-- ✅ Navigation working
+#### Main App (`src/App.tsx`):
+- ✅ Single route renders BookLayout
+- ✅ React Router only for initial route matching
+- ✅ All paths handled by BookLayout
 
-#### About Route (`app/about/page.tsx`):
-- ✅ Direct route to about page
-- ✅ Maintains book context
-- ✅ Shareable URL
+#### BookLayout (`src/BookLayout.tsx`):
+- ✅ Defines all pages with React components
+- ✅ CoverPage and AboutPage passed as content
+- ✅ Pages managed internally by BookContainer
+- ✅ URL managed by window.history API
 
 #### Features:
 - Full navigation between pages
 - Keyboard, scroll, click navigation
-- URL routing
+- URL routing via window.history (no React Router re-renders)
 - Bookmark navigation
 - Smooth page turns
+- Dynamic page rendering based on currentPage index
 
 ---
 

@@ -7,6 +7,15 @@
   --font-garamond: 'EB Garamond', serif;
 }
 
+/* Font classes for applying fonts */
+.font-cormorant {
+  font-family: var(--font-cormorant);
+}
+
+.font-garamond {
+  font-family: var(--font-garamond);
+}
+
 * {
   margin: 0;
   padding: 0;

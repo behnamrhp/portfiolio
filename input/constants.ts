@@ -2,7 +2,7 @@
 
 export const CV_LINK = "https://example.com/path-to-cv.pdf"; // TODO: Update with actual CV link
 
-export const ARTICLE_API_KEY = process.env.NEXT_PUBLIC_ARTICLE_API_KEY || "";
+export const ARTICLE_API_KEY = import.meta.env.VITE_ARTICLE_API_KEY || "";
 
 export const DEV_TO_USERNAME = "behnamrhp"; // Update with actual dev.to username
 

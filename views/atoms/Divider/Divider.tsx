@@ -3,7 +3,7 @@ import { DividerProps } from './Divider.types';
 
 const Divider: React.FC<DividerProps> = ({
   orientation = 'horizontal',
-  style = 'solid',
+  dividerStyle = 'solid',
   color = 'ink',
   thickness = 1,
   className = '',
@@ -26,7 +26,7 @@ const Divider: React.FC<DividerProps> = ({
     vertical: `border-l-${thickness} h-full`,
   };
   
-  if (style === 'ornamental') {
+  if (dividerStyle === 'ornamental') {
     return (
       <div
         className={`flex items-center justify-center my-4 ${className}`}
@@ -56,7 +56,7 @@ const Divider: React.FC<DividerProps> = ({
   
   const combinedClassName = `
     ${colorClasses[color]}
-    ${styleClasses[style]}
+    ${styleClasses[dividerStyle]}
     ${orientationClasses[orientation]}
     ${className}
   `.trim();
