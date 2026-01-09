@@ -11,8 +11,7 @@ import {
 } from '@/views/pages';
 import { ROUTES } from '@/input/constants';
 
-export default function Home() {
-  // Define all book pages
+export default function ArticlesPageRoute() {
   const pages = [
     {
       id: 'cover',
@@ -46,5 +45,7 @@ export default function Home() {
     },
   ];
 
-  return <BookContainer pages={pages} />;
+  return <BookContainer pages={pages} currentPage={4} />;
 }
+
+

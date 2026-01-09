@@ -12,8 +12,8 @@
 - **Framework**: Next.js (TypeScript)
 - **Rendering**: SSG (Static Site Generation)
 - **Styling**: Tailwind CSS
-- **Page Turns**: turn.js library
-- **Drag Interaction**: all-drag library
+- **Page Turns**: turn.js library (with jQuery)
+- **Drag Interaction**: HTML5 Drag and Drop API / React state
 - **Deployment**: GitHub Pages
 
 ### Color Palette
@@ -24,8 +24,8 @@ Tertiary (Lapis Blue):  #1F4E79
 ```
 
 ### Typography
-- **Titles/Cover**: Cormorant (local font)
-- **Body Content**: EB Garamond (local font)
+- **Titles/Cover**: Cormorant (Google Fonts, self-hosted by Next.js)
+- **Body Content**: EB Garamond (Google Fonts, self-hosted by Next.js)
 
 ### Responsive Breakpoints
 - **Mobile/Tablet**: Single page book
@@ -64,7 +64,7 @@ ARTICLE_API_KEY=<dev.to API key>
 ```
 
 ### Important Notes
-- ⚠️ All fonts must be local (no dynamic loading)
+- ⚠️ Fonts loaded via Google Fonts (optimized and self-hosted by Next.js)
 - ⚠️ All images use Next.js Image component
 - ⚠️ Grammar check all content before adding
 - ⚠️ Articles NOT pre-rendered (client-side only)
@@ -105,7 +105,7 @@ ARTICLE_API_KEY=<dev.to API key>
 - [ ] Follow MVVM architecture
 - [ ] Use atomic design for components
 - [ ] Test on mobile and desktop
-- [ ] Use local fonts only
+- [ ] Use Google Fonts (via next/font/google)
 - [ ] Optimize images with Next.js Image
 - [ ] Keep Persian theme consistent
 

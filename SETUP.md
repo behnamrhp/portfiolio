@@ -27,26 +27,10 @@ This will install:
 - React 18
 - TypeScript
 - Tailwind CSS
-- turn.js (for book page turns)
-- all-drag (for draggable skills)
 
-#### 2. Download Fonts
+**Note**: Fonts are loaded automatically via Google Fonts (no manual download needed).
 
-**Required fonts** (both variable fonts):
-
-1. **Cormorant**
-   - Go to: https://fonts.google.com/specimen/Cormorant
-   - Click "Download family"
-   - Extract and find `Cormorant-VariableFont_wght.ttf`
-   - Copy to: `assets/fonts/Cormorant-VariableFont_wght.ttf`
-
-2. **EB Garamond**
-   - Go to: https://fonts.google.com/specimen/EB+Garamond
-   - Click "Download family"
-   - Extract and find `EBGaramond-VariableFont_wght.ttf`
-   - Copy to: `assets/fonts/EBGaramond-VariableFont_wght.ttf`
-
-#### 3. Configure Environment Variables
+#### 2. Configure Environment Variables
 
 Create a `.env` file (copy from `.env.example`):
 
@@ -61,7 +45,7 @@ NEXT_PUBLIC_ARTICLE_API_KEY=your_api_key_here
 
 Get your API key from: https://dev.to/settings/extensions
 
-#### 4. Update Personal Information
+#### 3. Update Personal Information
 
 Edit these files with your information:
 
@@ -69,7 +53,7 @@ Edit these files with your information:
 - `input/dict.ts` - Verify the bio content is correct
 - Add your personal image to `assets/images/` for the cover page
 
-#### 5. Run the Development Server
+#### 4. Run the Development Server
 
 ```bash
 npm run dev
@@ -93,9 +77,11 @@ Use in components:
 ```
 
 #### Font Classes
-Fonts are configured in `app/layout.tsx`:
-- `font-cormorant` - For titles and cover
-- `font-garamond` - For body text
+Fonts are loaded via Google Fonts in `app/layout.tsx`:
+- `font-cormorant` - For titles and cover (Cormorant)
+- `font-garamond` - For body text (EB Garamond)
+
+Both fonts are automatically optimized and self-hosted by Next.js.
 
 Use in components:
 ```tsx
@@ -131,13 +117,13 @@ Use in components:
 
 ### 🎯 Ready for Phase 2
 
-Once you've completed steps 1-5 above, you're ready to start **Phase 2: Design System & Core Components**.
+Once you've completed steps 1-4 above, you're ready to start **Phase 2: Design System & Core Components**.
 
 See `docs/tasks/project-phases.md` for the next steps.
 
 ### ⚠️ Important Notes
 
-1. **Fonts must be local** - No CDN or dynamic loading
+1. **Fonts are optimized** - Loaded via Google Fonts and self-hosted by Next.js
 2. **All images** should use Next.js `<Image>` component
 3. **Content updates** - Edit files in `input/` directory only
 4. **Follow MVVM** - Keep models, viewmodels, and views separate
@@ -149,7 +135,7 @@ See `docs/tasks/project-phases.md` for the next steps.
 - **Solution**: Install Node.js 18+ from https://nodejs.org/
 
 **Problem**: Fonts not loading
-- **Solution**: Verify font files are in `assets/fonts/` with exact names
+- **Solution**: Fonts are loaded automatically via Google Fonts. Check your internet connection.
 
 **Problem**: TypeScript errors
 - **Solution**: Run `npm install` to install all type definitions
@@ -161,8 +147,7 @@ See `docs/tasks/project-phases.md` for the next steps.
 
 - [Next.js Docs](https://nextjs.org/docs)
 - [Tailwind Docs](https://tailwindcss.com/docs)
-- [Turn.js Docs](http://turnjs.com/docs)
-- [All-Drag Docs](https://all-drag.netlify.app/)
+- [Next.js Fonts](https://nextjs.org/docs/app/building-your-application/optimizing/fonts)
 
 ---
 

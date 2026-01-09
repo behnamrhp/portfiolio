@@ -57,7 +57,6 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
             height={96}
             bordered
             rounded
-            aspectRatio="1:1"
           />
         </div>
       )}

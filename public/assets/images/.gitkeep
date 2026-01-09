@@ -1,0 +1,19 @@
+# Images Directory
+
+## Required Images
+
+### Personal Photo
+- **File**: `profile-placeholder.jpg` or `profile.jpg`
+- **Size**: 512x512px recommended
+- **Format**: JPG or PNG
+- **Description**: Your professional photo for the cover page
+
+### Instructions
+1. Add your personal photo to this directory
+2. Name it `profile.jpg` (or update CoverPage.tsx to match your filename)
+3. Recommended: Square aspect ratio, professional lighting
+4. The image will be displayed in a circular frame
+
+## Placeholder
+A placeholder image is referenced in CoverPage.tsx. Replace with your actual photo.
+

@@ -1,5 +1,14 @@
 // Global type declarations
 
+/// <reference types="jquery" />
+
+declare global {
+  interface Window {
+    jQuery: any;
+    $: any;
+  }
+}
+
 declare module 'turn.js' {
   export interface TurnOptions {
     width?: number;

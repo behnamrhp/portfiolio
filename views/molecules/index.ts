@@ -14,4 +14,7 @@ export * from './ArticleCard';
 export { default as SkillIcon } from './SkillIcon';
 export * from './SkillIcon';
 
+export { default as ProjectCard } from './ProjectCard';
+export * from './ProjectCard';
+
 

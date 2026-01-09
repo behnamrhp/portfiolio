@@ -1,17 +1,21 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Cormorant, EB_Garamond } from "next/font/google";
 import "./globals.css";
+import "./page-turn.css";
+import "./turn.css";
 
-const cormorant = localFont({
-  src: "../assets/fonts/Cormorant-VariableFont_wght.ttf",
+const cormorant = Cormorant({
+  subsets: ["latin"],
   variable: "--font-cormorant",
   display: "swap",
+  weight: ["300", "400", "500", "600", "700"],
 });
 
-const garamond = localFont({
-  src: "../assets/fonts/EBGaramond-VariableFont_wght.ttf",
+const garamond = EB_Garamond({
+  subsets: ["latin"],
   variable: "--font-garamond",
   display: "swap",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
