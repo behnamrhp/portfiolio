@@ -15,13 +15,13 @@ const CoverPage: React.FC = () => {
           
         </div>
         
-            {/* Personal image */}
-            <ImageWrapper
-              src="/assets/images/me.jpeg"
-              alt="Behnam Rahimpour"
-              aspectRatio="1:1"
-              className="w-full h-full absolute lg:left-[0] lg:top-[0%] lg:w-[9.9rem] lg:h-[16.5rem] radius-[1px]  object-cover"
-            />
+        {/* Personal image */}
+        <ImageWrapper
+          src="/assets/images/me.jpeg"
+          alt="Behnam Rahimpour"
+          aspectRatio="1:1"
+          className="w-full h-full absolute lg:left-[0] lg:top-[0%] lg:w-[9.9rem] lg:h-[16.5rem] radius-[1px]  object-cover"
+        />
         
       {/* Hint to navigate */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center">
