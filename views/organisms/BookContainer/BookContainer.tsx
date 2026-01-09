@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { BookContainerProps } from './BookContainer.types';
 import Bookmark from '../../molecules/Bookmark';
 import NavigationArrow from '../../molecules/NavigationArrow';
-import { getResponsiveTurnConfig, isMobile, getBookWidth, getBookHeight } from '@/input';
+import { getResponsiveTurnConfig, isMobile } from '@/input';
 import $ from 'jquery';
 import '../../../src/lib/turn.js';
 
@@ -243,18 +243,19 @@ const BookContainer: React.FC<BookContainerProps> = ({
         {/* Use 'flipBook' class to match whiteboard tool pattern */}
         <div
           ref={flipBookRef}
-          className="flipBook shadow-2xl"
-          style={{
-            width: getBookWidth(),
-            height: getBookHeight(),
-          }}
+          className="flipBook "
         >
           {pages.map((page, index) => {
             return (
               <div
                 key={page.id}
-                className={`page p${index + 1} ${index === 0 ? 'hard' : ''}`}
+                className={`page  p${index + 1} ${index === 0 ? 'hard' : ''}`}
               >
+                {
+                  index === 0 ?
+                        <img alt="persian book cover" src="/assets/images/cover.png" className="w-full h-full absolute top-0 left-0 object-cover" />:
+                        null
+                }
                 <div className="font-garamond text-manuscript-ink h-full overflow-auto p-6 md:p-8 lg:p-12">
                   {children || page.content}
                 </div>

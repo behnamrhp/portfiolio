@@ -5,13 +5,15 @@ export const BREAKPOINTS = {
 
 export const SIZE_CONFIG = {
   // Max dimensions
-  MAX_WIDTH: 1400,
+  MAX_WIDTH: 1024,
   MAX_HEIGHT: 900,
   
   // Viewport multipliers
   MOBILE_WIDTH_MULTIPLIER: 0.95,
   DESKTOP_WIDTH_MULTIPLIER: 0.9,
   HEIGHT_MULTIPLIER: 0.85,
+  BOOK_WIDTH: 1024,
+  BOOK_HEIGHT: 1536,
 } as const;
 
 // Static function to check if mobile
@@ -20,16 +22,21 @@ export const isMobile = (): boolean => {
 };
 
 // Size calculations
-export const getBookWidth = (): number => {
+export const getBookSizes = (): { width: number, height: number } => {
+  const ratio =  SIZE_CONFIG.BOOK_HEIGHT / SIZE_CONFIG.BOOK_WIDTH;
   if (isMobile()) {
-    return window.innerWidth * SIZE_CONFIG.MOBILE_WIDTH_MULTIPLIER;
+    const width =  Math.min(window.innerWidth * SIZE_CONFIG.MOBILE_WIDTH_MULTIPLIER, SIZE_CONFIG.MAX_WIDTH)
+    return { 
+      width,
+      height: Math.min(width * ratio, window.innerHeight * 0.9)
+     };
   }
-  return Math.min(window.innerWidth * SIZE_CONFIG.DESKTOP_WIDTH_MULTIPLIER, SIZE_CONFIG.MAX_WIDTH);
-};
 
-export const getBookHeight = (): number => {
-  if (typeof window === 'undefined') return SIZE_CONFIG.MAX_HEIGHT;
-  return Math.min(window.innerHeight * SIZE_CONFIG.HEIGHT_MULTIPLIER, SIZE_CONFIG.MAX_HEIGHT);
+  const width = Math.min(window.innerWidth * SIZE_CONFIG.DESKTOP_WIDTH_MULTIPLIER, SIZE_CONFIG.MAX_WIDTH)
+  return { 
+    width,
+    height: Math.min(width * ratio, window.innerHeight * 0.9)
+  }
 };
 
 export const TurnJsConfigs: any = {
@@ -45,18 +52,21 @@ export const TurnJsConfigs: any = {
 export const getResponsiveTurnConfig = (): any => {
   const mobile = isMobile();
   
+  const { width, height } = getBookSizes();
   if (mobile) {
     return {
       ...TurnJsConfigs,
       display: 'single',
-      width: getBookWidth(),
+      width,
+      height
     };
   }
 
   return {
     ...TurnJsConfigs,
     display: 'double',
-    width: getBookWidth(),
+    width,
+    height,
   };
 };
 

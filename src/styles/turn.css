@@ -17,11 +17,6 @@
   box-sizing: border-box;
 }
 
-.flipBook .page img,
-.flipbook .page img {
-  max-width: 100%;
-  height: auto;
-}
 
 /* Turn.js Shadow Effects */
 .flipBook .even,
@@ -50,20 +45,7 @@
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
-/* Hard cover effect for first and last pages */
-/* Note: This should only apply to cover pages, not all pages */
-.flipBook .page.hard,
-.flipbook .page.hard {
-  background: #1f1b17;
-  border: 4px solid #1f4e79;
-}
 
-/* Regular pages (non-hard) should use manuscript paper color */
-.flipBook .page:not(.hard),
-.flipbook .page:not(.hard) {
-  background-color: #EFE3C6;
-  border: 4px solid #1f4e79;
-}
 
 /* Prevent text selection during page turn */
 .flipBook.grabbing,
@@ -117,5 +99,3 @@
   opacity: 0.5;
   pointer-events: none;
 }
-
-
