@@ -18,55 +18,88 @@ export const SIZE_CONFIG = {
 
 // Static function to check if mobile
 export const isMobile = (): boolean => {
+  if (typeof window === 'undefined') return false;
   return window.innerWidth < BREAKPOINTS.MOBILE;
 };
 
 // Size calculations
 export const getBookSizes = (): { width: number, height: number } => {
-  const ratio =  SIZE_CONFIG.BOOK_HEIGHT / SIZE_CONFIG.BOOK_WIDTH;
+  if (typeof window === 'undefined') {
+    return { width: SIZE_CONFIG.MAX_WIDTH, height: SIZE_CONFIG.MAX_HEIGHT };
+  }
+
+  const ratio = SIZE_CONFIG.BOOK_HEIGHT / SIZE_CONFIG.BOOK_WIDTH;
   if (isMobile()) {
-    const width =  Math.min(window.innerWidth * SIZE_CONFIG.MOBILE_WIDTH_MULTIPLIER, SIZE_CONFIG.MAX_WIDTH)
+    const width = Math.min(window.innerWidth * SIZE_CONFIG.MOBILE_WIDTH_MULTIPLIER, SIZE_CONFIG.MAX_WIDTH);
     return { 
       width,
       height: Math.min(width * ratio, window.innerHeight * 0.9)
-     };
+    };
   }
 
-  const width = Math.min(window.innerWidth * SIZE_CONFIG.DESKTOP_WIDTH_MULTIPLIER, SIZE_CONFIG.MAX_WIDTH)
+  const width = Math.min(window.innerWidth * SIZE_CONFIG.DESKTOP_WIDTH_MULTIPLIER, SIZE_CONFIG.MAX_WIDTH);
   return { 
     width,
     height: Math.min(width * ratio, window.innerHeight * 0.9)
-  }
+  };
 };
 
-export const TurnJsConfigs: any = {
-  width: SIZE_CONFIG.MAX_WIDTH,
-  height: SIZE_CONFIG.MAX_HEIGHT,
-  autoCenter: true,
-  display: 'single',
-  acceleration: true,
-  elevation: 50,
-  gradients: true,
+// React-pageflip configuration
+export interface PageFlipConfig {
+  size: 'fixed' | 'stretch';
+  maxWidth: number;
+  maxHeight: number;
+  drawShadow: boolean;
+  flippingTime: number;
+  usePortrait: boolean;
+  startZIndex: number;
+  autoSize: boolean;
+  maxShadowOpacity: number;
+  showCover: boolean;
+  mobileScrollSupport: boolean;
+  clickEventForward: boolean;
+  useMouseEvents: boolean;
+  swipeDistance: number;
+  showPageCorners: boolean;
+  disableFlipByClick: boolean;
+}
+
+export const PageFlipConfigs: PageFlipConfig = {
+  size: 'fixed',
+  maxWidth: SIZE_CONFIG.MAX_WIDTH,
+  maxHeight: SIZE_CONFIG.MAX_HEIGHT,
+  drawShadow: true,
+  flippingTime: 600,
+  usePortrait: true,
+  startZIndex: 0,
+  autoSize: true,
+  maxShadowOpacity: 1,
+  showCover: false,
+  mobileScrollSupport: true,
+  clickEventForward: true,
+  useMouseEvents: true,
+  swipeDistance: 30,
+  showPageCorners: true,
+  disableFlipByClick: false,
 };
 
-export const getResponsiveTurnConfig = (): any => {
+export const getResponsivePageFlipConfig = (): PageFlipConfig => {
   const mobile = isMobile();
   
-  const { width, height } = getBookSizes();
   if (mobile) {
     return {
-      ...TurnJsConfigs,
-      display: 'single',
-      width,
-      height
+      ...PageFlipConfigs,
+      size: 'stretch',
     };
   }
 
   return {
-    ...TurnJsConfigs,
-    display: 'double',
-    width,
-    height,
+    ...PageFlipConfigs,
+    size: 'stretch',
   };
 };
 
+// Legacy exports for backward compatibility during migration
+// These can be removed after full migration
+export const TurnJsConfigs: any = PageFlipConfigs;
+export const getResponsiveTurnConfig = (): any => getResponsivePageFlipConfig();
