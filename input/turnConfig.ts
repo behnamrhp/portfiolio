@@ -27,7 +27,6 @@ export const getBookSizes = (): { width: number, height: number } => {
   if (typeof window === 'undefined') {
     return { width: SIZE_CONFIG.MAX_WIDTH, height: SIZE_CONFIG.MAX_HEIGHT };
   }
-
   const ratio = SIZE_CONFIG.BOOK_HEIGHT / SIZE_CONFIG.BOOK_WIDTH;
   if (isMobile()) {
     const width = Math.min(window.innerWidth * SIZE_CONFIG.MOBILE_WIDTH_MULTIPLIER, SIZE_CONFIG.MAX_WIDTH);
