@@ -1,10 +1,36 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import HTMLFlipBook from 'react-pageflip';
 import { BookContainerProps } from './BookContainer.types';
 import Bookmark from '../../molecules/Bookmark';
 import NavigationArrow from '../../molecules/NavigationArrow';
-import { getResponsiveTurnConfig, isMobile } from '@/input';
-import $ from 'jquery';
-import '../../../src/lib/turn.js';
+import { getResponsivePageFlipConfig, getBookSizes, SIZE_CONFIG, isMobile } from '@/input';
+
+// Page component for react-pageflip that accepts ref
+// react-pageflip expects pages to be div elements with forwarded refs
+const Page = React.forwardRef<
+  HTMLDivElement,
+  { children: React.ReactNode; style?: React.CSSProperties; className?: string; pageNumber?: number; dataDensity?: string }
+>((props, ref) => {
+  return (
+    <div
+      ref={ref}
+      className={props.className}
+      data-page-number={props.pageNumber}
+      data-density={props.dataDensity}
+      style={{
+        width: '100%',
+        height: '100%',
+        boxSizing: 'border-box',
+        position: 'relative',
+        ...props.style,
+      }}
+    >
+      {props.children}
+    </div>
+  );
+});
+
+Page.displayName = 'Page';
 
 const BookContainer: React.FC<BookContainerProps> = ({
   pages,
@@ -14,133 +40,86 @@ const BookContainer: React.FC<BookContainerProps> = ({
   children,
   ...props
 }) => {
-  const flipBookRef = useRef<HTMLDivElement>(null);
+  const flipBookRef = useRef<any>(null);
   const [currentPage, setCurrentPage] = useState(controlledPage ?? 0);
-  const turnInstanceRef = useRef<JQuery | null>(null);
+  const isInitializedRef = useRef(false);
+  const bookSize = getBookSizes();
 
-  // Initialize turn.js
-  useEffect(() => {
-    if (!pages.length) {
-      return;
+  // Helper to get pageFlip instance
+  const getPageFlip = () => {
+    if (!flipBookRef.current) return null;
+    try {
+      return flipBookRef.current.pageFlip();
+    } catch (e) {
+      console.warn('Error getting pageFlip instance:', e);
+      return null;
     }
+  };
 
-    const initTurn = () => {
-      if (!flipBookRef.current) {
-        requestAnimationFrame(initTurn);
-        return;
-      }
+  // Handle page flip event
+  const handleFlip = useCallback(
+    (e: any) => {
+      // react-pageflip onFlip event structure: e.target is the PageFlip instance
+      const pageFlip = e.target || getPageFlip();
+      if (!pageFlip) return;
 
-      const $flipBook = $(flipBookRef.current);
-
-      if (typeof $flipBook.turn !== 'function') {
-        return;
-      }
-
-      const options: TurnJs.TurnOptions = {
-        pages: pages.length,
-        ...getResponsiveTurnConfig(),
-        when: {
-          turning: (_event, page) => {
-            setCurrentPage(page - 1);
-            if (onPageChange) {
-              onPageChange(page - 1);
-            }
-          },
-          start: (_event, _pageObject, _corner) => {
-            // Allow page turning
-          },
-        },
-      };
-
-      turnInstanceRef.current = $flipBook;
-      $flipBook.turn(options);
-    };
-
-    const rafId = requestAnimationFrame(initTurn);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      if (turnInstanceRef.current && typeof turnInstanceRef.current.turn === 'function') {
-        try {
-          turnInstanceRef.current.turn('destroy');
-        } catch (e) {
-          // Ignore errors on cleanup
+      try {
+        const newPage = pageFlip.getCurrentPageIndex();
+        setCurrentPage(newPage);
+        if (onPageChange) {
+          onPageChange(newPage);
         }
+      } catch (error) {
+        console.warn('Error in handleFlip:', error);
       }
-    };
-  }, [pages.length, onPageChange, controlledPage]);
+    },
+    [onPageChange]
+  );
+
+  // Mark as initialized after first render
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      isInitializedRef.current = true;
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Handle controlled page changes
   useEffect(() => {
-    if (!turnInstanceRef.current || controlledPage === undefined) return;
+    if (controlledPage === undefined || !isInitializedRef.current) return;
+    const pageFlip = getPageFlip();
+    if (!pageFlip) return;
 
-    const $flipBook = turnInstanceRef.current;
-    
     try {
-      const totalPages = $flipBook.turn('pages') as number;
-      if (totalPages === 0) {
-        return;
-      }
-
-      const currentTurnPage = $flipBook.turn('page') as number;
-
-      if (currentTurnPage - 1 !== controlledPage && controlledPage >= 0 && controlledPage < totalPages) {
-        $flipBook.turn('page', controlledPage + 1);
+      const currentPageNum = pageFlip.getCurrentPageIndex();
+      if (currentPageNum !== controlledPage && controlledPage >= 0 && controlledPage < pages.length) {
+        pageFlip.turnToPage(controlledPage);
       }
     } catch (e) {
       console.warn('Error changing page:', e);
     }
-  }, [controlledPage]);
+  }, [controlledPage, pages.length]);
 
   const goToPage = (pageIndex: number) => {
-    if (!turnInstanceRef.current) return;
-    
+    const pageFlip = getPageFlip();
+    if (!pageFlip) return;
+
     try {
       if (pageIndex < 0 || pageIndex >= pages.length) return;
-      
-      const totalPages = turnInstanceRef.current.turn('pages') as number;
-      if (!totalPages || totalPages === 0) return;
-      
-      const targetPage = pageIndex + 1;
-      if (targetPage < 1 || targetPage > totalPages) return;
-      
-      turnInstanceRef.current.turn('page', targetPage);
+      pageFlip.turnToPage(pageIndex);
     } catch (e) {
       console.warn('Error in goToPage:', e);
     }
   };
 
   const nextPage = () => {
-    if (!turnInstanceRef.current) return;
-    
+    const pageFlip = getPageFlip();
+    if (!pageFlip) return;
+
     try {
-      const totalPages = turnInstanceRef.current.turn('pages') as number;
-      if (!totalPages || totalPages === 0) return;
-      
-      let currentTurnPage = turnInstanceRef.current.turn('page') as number;
-      
-      if (!currentTurnPage || isNaN(currentTurnPage) || currentTurnPage < 1) {
-        currentTurnPage = currentPage + 1; // Convert 0-based to 1-based
-      }
-      
-      if (isNaN(currentTurnPage) || currentTurnPage < 1 || currentTurnPage > totalPages) {
-        console.warn('Invalid page number:', currentTurnPage);
-        return;
-      }
-      
-      const isDouble = !isMobile();
-      let nextPageNum: number;
-      
-      if (isDouble) {
-        const view = turnInstanceRef.current.turn('view', currentTurnPage) as TurnJs.View;
-        const lastPageInView = view[1] || view[0] || currentTurnPage;
-        nextPageNum = Math.min(totalPages, lastPageInView + 1);
-      } else {
-        nextPageNum = Math.min(totalPages, currentTurnPage + 1);
-      }
-      
-      if (nextPageNum > currentTurnPage && nextPageNum <= totalPages && !isNaN(nextPageNum)) {
-        turnInstanceRef.current.turn('page', nextPageNum);
+      const currentPageNum = pageFlip.getCurrentPageIndex();
+      if (currentPageNum < pages.length - 1) {
+        pageFlip.flipNext('top');
       }
     } catch (e) {
       console.warn('Error in nextPage:', e);
@@ -148,36 +127,13 @@ const BookContainer: React.FC<BookContainerProps> = ({
   };
 
   const previousPage = () => {
-    if (!turnInstanceRef.current) return;
-    
+    const pageFlip = getPageFlip();
+    if (!pageFlip) return;
+
     try {
-      const totalPages = turnInstanceRef.current.turn('pages') as number;
-      if (!totalPages || totalPages === 0) return;
-      
-      let currentTurnPage = turnInstanceRef.current.turn('page') as number;
-      
-      if (!currentTurnPage || isNaN(currentTurnPage) || currentTurnPage < 1) {
-        currentTurnPage = currentPage + 1; // Convert 0-based to 1-based
-      }
-      
-      if (isNaN(currentTurnPage) || currentTurnPage < 1 || currentTurnPage > totalPages) {
-        console.warn('Invalid page number:', currentTurnPage);
-        return;
-      }
-      
-      const isDouble = !isMobile();
-      let prevPageNum: number;
-      
-      if (isDouble) {
-        const view = turnInstanceRef.current.turn('view', currentTurnPage) as TurnJs.View;
-        const firstPageInView = view[0] || currentTurnPage;
-        prevPageNum = Math.max(1, firstPageInView - 1);
-      } else {
-        prevPageNum = Math.max(1, currentTurnPage - 1);
-      }
-      
-      if (prevPageNum < currentTurnPage && prevPageNum >= 1 && !isNaN(prevPageNum)) {
-        turnInstanceRef.current.turn('page', prevPageNum);
+      const currentPageNum = pageFlip.getCurrentPageIndex();
+      if (currentPageNum > 0) {
+        pageFlip.flipPrev('top');
       }
     } catch (e) {
       console.warn('Error in previousPage:', e);
@@ -204,6 +160,69 @@ const BookContainer: React.FC<BookContainerProps> = ({
 
   const canGoNext = currentPage < pages.length - 1;
   const canGoPrevious = currentPage > 0;
+  const isMobileScreen = isMobile();
+
+  const pageFlipConfig = getResponsivePageFlipConfig();
+
+  // Render pages - react-pageflip requires each page as a child
+  // For double page mode on desktop, we need to handle it differently
+  // Since react-pageflip works with single pages, we'll use single page mode for now
+  // and adjust the width for desktop to accommodate double-page view
+  const renderPages =  pages.map((page, index) => {
+    const pageNumber = isMobileScreen ? index + 1 : index + 2;
+    const isFirstPage = isMobileScreen ? index === 0 : index === 1;
+    const isLastPage = index === pages.length - 1;
+
+    if (index === 0 && !isMobileScreen) {
+      return (
+        <Page key="cover0"
+        pageNumber={0} className="page bg-[url('/assets/images/bg.png')] bg-contain page-cover page-cover-top hard font-garamond">
+          <div className="page-content" />
+        </Page>
+      )
+    }
+    
+    // Determine page classes based on position and type
+    const pageClasses = `
+      page
+      ${isFirstPage || isLastPage ? 'page-cover hard' : ''}
+      ${isFirstPage ? 'page-cover-top' : ''}
+      ${isLastPage ? 'page-cover-bottom' : ''}
+      bg-manuscript-paper
+      text-manuscript-ink
+      overflow-auto
+      font-garamond
+    `.trim();
+    
+      return (
+        <Page
+          key={page.id}
+          pageNumber={pageNumber}
+          dataDensity={isFirstPage || isLastPage ? "hard" : "soft"}
+          className={pageClasses}
+        >
+          <div className='page-content'>
+            {((index === 1 && !isMobileScreen) || (index === 0 && isMobileScreen)) && (
+              <div style={{
+                height: bookSize.height,
+                width: bookSize.width,
+                backgroundImage: `url("/assets/images/cover.png")`,
+                backgroundSize: '100% 100%',
+                backgroundPosition: '0 0',
+                backgroundRepeat: 'no-repeat',
+              }} className='fixed top-0 left-0 z-0' >
+
+                test
+              </div>
+            )}
+            <div className="font-garamond h-full overflow-auto p-6 md:p-8 lg:p-12 relative z-10">
+              {children || page.content}
+            </div>
+          </div>
+        </Page>
+      );
+    });
+  
 
   return (
     <div className={combinedClassName} {...props}>
@@ -222,7 +241,7 @@ const BookContainer: React.FC<BookContainerProps> = ({
         </div>
       </div>
 
-      {/* Book Container with turn.js */}
+      {/* Book Container with react-pageflip */}
       <div className="relative">
         {/* Navigation Arrows */}
         <NavigationArrow
@@ -239,30 +258,36 @@ const BookContainer: React.FC<BookContainerProps> = ({
           className="absolute right-4 top-1/2 -translate-y-1/2 z-30"
         />
 
-        {/* FlipBook - turn.js container */}
-        {/* Use 'flipBook' class to match whiteboard tool pattern */}
-        <div
+        {/* FlipBook - react-pageflip container */}
+        <HTMLFlipBook
           ref={flipBookRef}
-          className="flipBook "
+          width={bookSize.width}
+          height={bookSize.height}
+          minWidth={bookSize.width}
+          minHeight={bookSize.height}
+          maxWidth={pageFlipConfig.maxWidth ?? SIZE_CONFIG.BOOK_HEIGHT}
+          maxHeight={pageFlipConfig.maxHeight ?? SIZE_CONFIG.BOOK_HEIGHT}
+          size={"stretch"}
+          drawShadow={pageFlipConfig.drawShadow ?? true}
+          flippingTime={pageFlipConfig.flippingTime}
+          usePortrait={isMobileScreen}
+          startPage={isMobileScreen ? 0 : 1}
+          startZIndex={isMobileScreen ? 0 : 1}
+          autoSize={pageFlipConfig.autoSize ?? false}
+          maxShadowOpacity={pageFlipConfig.maxShadowOpacity ?? 0.5}
+          showCover={pageFlipConfig.showCover ?? true}
+          mobileScrollSupport={pageFlipConfig.mobileScrollSupport ?? true}
+          clickEventForward={pageFlipConfig.clickEventForward}
+          useMouseEvents={pageFlipConfig.useMouseEvents}
+          swipeDistance={pageFlipConfig.swipeDistance}
+          showPageCorners={pageFlipConfig.showPageCorners ?? true}
+          disableFlipByClick={pageFlipConfig.disableFlipByClick}
+          onFlip={handleFlip}
+          className="flipbook-container"
+          style={{}}
         >
-          {pages.map((page, index) => {
-            return (
-              <div
-                key={page.id}
-                className={`page  p${index + 1} ${index === 0 ? 'hard' : ''}`}
-              >
-                {
-                  index === 0 ?
-                        <img alt="persian book cover" src="/assets/images/cover.png" className="w-full h-full absolute top-0 left-0 object-cover" />:
-                        null
-                }
-                <div className="font-garamond text-manuscript-ink h-full overflow-auto p-6 md:p-8 lg:p-12">
-                  {children || page.content}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+          {renderPages}
+        </HTMLFlipBook>
       </div>
 
       {/* Page indicator */}

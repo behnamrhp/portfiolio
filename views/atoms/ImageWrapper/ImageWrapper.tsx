@@ -10,6 +10,7 @@ const ImageWrapper: React.FC<ImageWrapperProps> = ({
   className = '',
   width,
   height,
+  style,
   ...props
 }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -46,7 +47,7 @@ const ImageWrapper: React.FC<ImageWrapperProps> = ({
   // If aspect ratio is specified, use container approach
   if (aspectRatio) {
     return (
-      <div className={`relative ${combinedClassName}`}>
+      <div className={`relative ${combinedClassName}`} style={style}>
         {isLoading && !hasError && (
           <div className="absolute inset-0 bg-manuscript-paper animate-pulse" />
         )}
@@ -71,7 +72,7 @@ const ImageWrapper: React.FC<ImageWrapperProps> = ({
   
   // Standard image without aspect ratio container
   return (
-    <div className={combinedClassName}>
+    <div style={style} className={combinedClassName}>
       {isLoading && !hasError && (
         <div className="w-full h-full bg-manuscript-paper animate-pulse" />
       )}
@@ -87,7 +88,7 @@ const ImageWrapper: React.FC<ImageWrapperProps> = ({
           height={height}
           onLoad={handleLoad}
           onError={handleError}
-          className={`${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity`}
+          className={`${isLoading ? 'opacity-0' : 'opacity-100'} h-full w-full transition-opacity`}
           loading="lazy"
           {...props}
         />
