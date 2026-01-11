@@ -29,7 +29,7 @@ export const getBookSizes = (): { width: number, height: number } => {
   }
   const ratio = SIZE_CONFIG.BOOK_HEIGHT / SIZE_CONFIG.BOOK_WIDTH;
   if (isMobile()) {
-    const width = Math.min(window.innerWidth * SIZE_CONFIG.MOBILE_WIDTH_MULTIPLIER, window.innerWidth * 0.8);
+    const width = Math.min(window.innerWidth * SIZE_CONFIG.MOBILE_WIDTH_MULTIPLIER, window.innerWidth * 0.9);
     return { 
       width,
       height: Math.min(width * ratio, window.innerHeight * 0.9)

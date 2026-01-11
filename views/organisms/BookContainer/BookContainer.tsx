@@ -203,11 +203,17 @@ const BookContainer: React.FC<BookContainerProps> = ({
         >
           <div className='page-content'>
             {((index === 1 && !isMobileScreen) || (index === 0 && isMobileScreen)) && (
-              <img
-                alt="persian book cover"
-                src="/assets/images/cover.png"
-                className="w-full h-full absolute top-0 left-0 object-cover z-0"
-              />
+              <div style={{
+                height: bookSize.height,
+                width: bookSize.width,
+                backgroundImage: `url("/assets/images/cover.png")`,
+                backgroundSize: '100% 100%',
+                backgroundPosition: '0 0',
+                backgroundRepeat: 'no-repeat',
+              }} className='fixed top-0 left-0 z-0' >
+
+                test
+              </div>
             )}
             <div className="font-garamond h-full overflow-auto p-6 md:p-8 lg:p-12 relative z-10">
               {children || page.content}
