@@ -29,14 +29,14 @@ export const getBookSizes = (): { width: number, height: number } => {
   }
   const ratio = SIZE_CONFIG.BOOK_HEIGHT / SIZE_CONFIG.BOOK_WIDTH;
   if (isMobile()) {
-    const width = Math.min(window.innerWidth * SIZE_CONFIG.MOBILE_WIDTH_MULTIPLIER, SIZE_CONFIG.MAX_WIDTH);
+    const width = Math.min(window.innerWidth * SIZE_CONFIG.MOBILE_WIDTH_MULTIPLIER, window.innerWidth * 0.8);
     return { 
       width,
       height: Math.min(width * ratio, window.innerHeight * 0.9)
     };
   }
 
-  const width = Math.min(window.innerWidth * SIZE_CONFIG.DESKTOP_WIDTH_MULTIPLIER, SIZE_CONFIG.MAX_WIDTH);
+  const width = Math.min(window.innerWidth * SIZE_CONFIG.DESKTOP_WIDTH_MULTIPLIER, window.innerWidth * 0.4);
   return { 
     width,
     height: Math.min(width * ratio, window.innerHeight * 0.9)

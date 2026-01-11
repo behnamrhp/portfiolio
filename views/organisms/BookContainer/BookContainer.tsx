@@ -3,24 +3,26 @@ import HTMLFlipBook from 'react-pageflip';
 import { BookContainerProps } from './BookContainer.types';
 import Bookmark from '../../molecules/Bookmark';
 import NavigationArrow from '../../molecules/NavigationArrow';
-import { getResponsivePageFlipConfig, getBookSizes } from '@/input';
+import { getResponsivePageFlipConfig, getBookSizes, SIZE_CONFIG, isMobile } from '@/input';
 
 // Page component for react-pageflip that accepts ref
 // react-pageflip expects pages to be div elements with forwarded refs
 const Page = React.forwardRef<
   HTMLDivElement,
-  { children: React.ReactNode; className?: string; pageNumber?: number }
+  { children: React.ReactNode; style?: React.CSSProperties; className?: string; pageNumber?: number; dataDensity?: string }
 >((props, ref) => {
   return (
     <div
       ref={ref}
       className={props.className}
       data-page-number={props.pageNumber}
+      data-density={props.dataDensity}
       style={{
         width: '100%',
         height: '100%',
         boxSizing: 'border-box',
         position: 'relative',
+        ...props.style,
       }}
     >
       {props.children}
@@ -40,18 +42,8 @@ const BookContainer: React.FC<BookContainerProps> = ({
 }) => {
   const flipBookRef = useRef<any>(null);
   const [currentPage, setCurrentPage] = useState(controlledPage ?? 0);
-  const [bookSize, setBookSize] = useState(getBookSizes());
-  const initialPageRef = useRef(controlledPage ?? 0);
   const isInitializedRef = useRef(false);
-
-  // Update book size on window resize
-  useEffect(() => {
-    const handleResize = () => {
-      setBookSize(getBookSizes());
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const bookSize = getBookSizes();
 
   // Helper to get pageFlip instance
   const getPageFlip = () => {
@@ -168,6 +160,7 @@ const BookContainer: React.FC<BookContainerProps> = ({
 
   const canGoNext = currentPage < pages.length - 1;
   const canGoPrevious = currentPage > 0;
+  const isMobileScreen = isMobile();
 
   const pageFlipConfig = getResponsivePageFlipConfig();
 
@@ -175,36 +168,55 @@ const BookContainer: React.FC<BookContainerProps> = ({
   // For double page mode on desktop, we need to handle it differently
   // Since react-pageflip works with single pages, we'll use single page mode for now
   // and adjust the width for desktop to accommodate double-page view
-  const renderPages = () => {
-    return pages.map((page, index) => {
+  const renderPages =  pages.map((page, index) => {
+    const pageNumber = isMobileScreen ? index + 1 : index + 2;
+    const isFirstPage = isMobileScreen ? index === 0 : index === 1;
+    const isLastPage = index === pages.length - 1;
+
+    if (index === 0 && !isMobileScreen) {
+      return (
+        <Page key="cover0"
+        pageNumber={0} className="page bg-[url('/assets/images/bg.png')] bg-contain page-cover page-cover-top hard font-garamond">
+          <div className="page-content" />
+        </Page>
+      )
+    }
+    
+    // Determine page classes based on position and type
+    const pageClasses = `
+      page
+      ${isFirstPage || isLastPage ? 'page-cover hard' : ''}
+      ${isFirstPage ? 'page-cover-top' : ''}
+      ${isLastPage ? 'page-cover-bottom' : ''}
+      bg-manuscript-paper
+      text-manuscript-ink
+      overflow-auto
+      font-garamond
+    `.trim();
+    
       return (
         <Page
           key={page.id}
-          pageNumber={index}
-          className={`
-            page
-            bg-manuscript-paper
-            ${index === 0 ? 'hard' : ''}
-            font-garamond
-            text-manuscript-ink
-            h-full
-            overflow-auto
-          `.trim()}
+          pageNumber={pageNumber}
+          dataDensity={isFirstPage || isLastPage ? "hard" : "soft"}
+          className={pageClasses}
         >
-          {index === 0 && (
-            <img
-              alt="persian book cover"
-              src="/assets/images/cover.png"
-              className="w-full h-full absolute top-0 left-0 object-cover z-0"
-            />
-          )}
-          <div className="font-garamond text-manuscript-ink h-full overflow-auto p-6 md:p-8 lg:p-12 relative z-10">
-            {children || page.content}
+          <div className='page-content'>
+            {((index === 1 && !isMobileScreen) || (index === 0 && isMobileScreen)) && (
+              <img
+                alt="persian book cover"
+                src="/assets/images/cover.png"
+                className="w-full h-full absolute top-0 left-0 object-cover z-0"
+              />
+            )}
+            <div className="font-garamond h-full overflow-auto p-6 md:p-8 lg:p-12 relative z-10">
+              {children || page.content}
+            </div>
           </div>
         </Page>
       );
     });
-  };
+  
 
   return (
     <div className={combinedClassName} {...props}>
@@ -245,30 +257,30 @@ const BookContainer: React.FC<BookContainerProps> = ({
           ref={flipBookRef}
           width={bookSize.width}
           height={bookSize.height}
-          minWidth={300}
-          minHeight={400}
-          maxWidth={pageFlipConfig.maxWidth}
-          maxHeight={pageFlipConfig.maxHeight}
-          size={pageFlipConfig.size}
-          drawShadow={pageFlipConfig.drawShadow}
+          minWidth={bookSize.width}
+          minHeight={bookSize.height}
+          maxWidth={pageFlipConfig.maxWidth ?? SIZE_CONFIG.BOOK_HEIGHT}
+          maxHeight={pageFlipConfig.maxHeight ?? SIZE_CONFIG.BOOK_HEIGHT}
+          size={"stretch"}
+          drawShadow={pageFlipConfig.drawShadow ?? true}
           flippingTime={pageFlipConfig.flippingTime}
-          usePortrait={pageFlipConfig.usePortrait}
-          startPage={initialPageRef.current}
-          startZIndex={pageFlipConfig.startZIndex}
-          autoSize={pageFlipConfig.autoSize}
-          maxShadowOpacity={pageFlipConfig.maxShadowOpacity}
-          showCover={pageFlipConfig.showCover}
-          mobileScrollSupport={pageFlipConfig.mobileScrollSupport}
+          usePortrait={isMobileScreen}
+          startPage={isMobileScreen ? 0 : 1}
+          startZIndex={isMobileScreen ? 0 : 1}
+          autoSize={pageFlipConfig.autoSize ?? false}
+          maxShadowOpacity={pageFlipConfig.maxShadowOpacity ?? 0.5}
+          showCover={pageFlipConfig.showCover ?? true}
+          mobileScrollSupport={pageFlipConfig.mobileScrollSupport ?? true}
           clickEventForward={pageFlipConfig.clickEventForward}
           useMouseEvents={pageFlipConfig.useMouseEvents}
           swipeDistance={pageFlipConfig.swipeDistance}
-          showPageCorners={pageFlipConfig.showPageCorners}
+          showPageCorners={pageFlipConfig.showPageCorners ?? true}
           disableFlipByClick={pageFlipConfig.disableFlipByClick}
           onFlip={handleFlip}
           className="flipbook-container"
           style={{}}
         >
-          {renderPages()}
+          {renderPages}
         </HTMLFlipBook>
       </div>
 

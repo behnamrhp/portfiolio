@@ -7,15 +7,17 @@ import {
   ArticlesPage,
 } from '@/views/pages';
 import { ROUTES } from '@/input/constants';
+import { isMobile } from '@/input/turnConfig';
 
-/**
- * BookLayout component that wraps all book pages
- * Defines all pages with their components for dynamic rendering
- */
-export function BookLayout() {
-  // Define all pages with their components
-  // Pages are rendered dynamically based on current page index
   const pages = [
+    ...(isMobile() ? [] : [
+      {
+        id: 'bg',
+        title: 'Background',
+        path: "/",
+        content: null,
+      },
+    ]),
     {
       id: 'cover',
       title: 'Cover',
@@ -47,6 +49,15 @@ export function BookLayout() {
       content: <ArticlesPage />,
     },
   ];
+
+
+/**
+ * BookLayout component that wraps all book pages
+ * Defines all pages with their components for dynamic rendering
+ */
+export function BookLayout() {
+  // Define all pages with their components
+  // Pages are rendered dynamically based on current page index
 
   return <BookContainer pages={pages} />;
 }
