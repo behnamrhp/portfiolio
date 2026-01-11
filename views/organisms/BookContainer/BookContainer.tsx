@@ -4,6 +4,7 @@ import { BookContainerProps } from './BookContainer.types';
 import Bookmark from '../../molecules/Bookmark';
 import NavigationArrow from '../../molecules/NavigationArrow';
 import { getResponsivePageFlipConfig, getBookSizes, SIZE_CONFIG, isMobile } from '@/input';
+import { useKeyboardNavigation } from '@/viewmodels';
 
 // Page component for react-pageflip that accepts ref
 // react-pageflip expects pages to be div elements with forwarded refs
@@ -44,9 +45,10 @@ const BookContainer: React.FC<BookContainerProps> = ({
   const [currentPage, setCurrentPage] = useState(controlledPage ?? 0);
   const isInitializedRef = useRef(false);
   const bookSize = getBookSizes();
+  const isMobileScreen = isMobile();
+  const initialStartPage = controlledPage ?? 0;
 
-  // Helper to get pageFlip instance
-  const getPageFlip = () => {
+  const getPageFlip = useCallback(() => {
     if (!flipBookRef.current) return null;
     try {
       return flipBookRef.current.pageFlip();
@@ -54,7 +56,7 @@ const BookContainer: React.FC<BookContainerProps> = ({
       console.warn('Error getting pageFlip instance:', e);
       return null;
     }
-  };
+  }, []);
 
   // Handle page flip event
   const handleFlip = useCallback(
@@ -84,7 +86,8 @@ const BookContainer: React.FC<BookContainerProps> = ({
     return () => clearTimeout(timer);
   }, []);
 
-  // Handle controlled page changes
+  // Handle controlled page changes from parent (keyboard, URL, etc.)
+  // This is where we use React PageFlip's turnToPage method
   useEffect(() => {
     if (controlledPage === undefined || !isInitializedRef.current) return;
     const pageFlip = getPageFlip();
@@ -112,7 +115,9 @@ const BookContainer: React.FC<BookContainerProps> = ({
     }
   };
 
-  const nextPage = () => {
+  // Navigation functions that directly use React PageFlip methods
+  // These are called by BOTH arrow buttons AND keyboard
+  const nextPage = useCallback(() => {
     const pageFlip = getPageFlip();
     if (!pageFlip) return;
 
@@ -124,9 +129,9 @@ const BookContainer: React.FC<BookContainerProps> = ({
     } catch (e) {
       console.warn('Error in nextPage:', e);
     }
-  };
+  }, [pages.length, getPageFlip]);
 
-  const previousPage = () => {
+  const previousPage = useCallback(() => {
     const pageFlip = getPageFlip();
     if (!pageFlip) return;
 
@@ -138,7 +143,14 @@ const BookContainer: React.FC<BookContainerProps> = ({
     } catch (e) {
       console.warn('Error in previousPage:', e);
     }
-  };
+  }, [getPageFlip]);
+  
+  // Keyboard navigation - uses the same functions as arrow buttons
+  useKeyboardNavigation({
+    onNext: nextPage,
+    onPrevious: previousPage,
+    enabled: true,
+  });
 
   const getBookmarkPosition = (index: number) => {
     const bookmarkWidth = 100;
@@ -160,7 +172,6 @@ const BookContainer: React.FC<BookContainerProps> = ({
 
   const canGoNext = currentPage < pages.length - 1;
   const canGoPrevious = currentPage > 0;
-  const isMobileScreen = isMobile();
 
   const pageFlipConfig = getResponsivePageFlipConfig();
 
@@ -271,7 +282,7 @@ const BookContainer: React.FC<BookContainerProps> = ({
           drawShadow={pageFlipConfig.drawShadow ?? true}
           flippingTime={pageFlipConfig.flippingTime}
           usePortrait={isMobileScreen}
-          startPage={isMobileScreen ? 0 : 1}
+          startPage={initialStartPage}
           startZIndex={isMobileScreen ? 0 : 1}
           autoSize={pageFlipConfig.autoSize ?? false}
           maxShadowOpacity={pageFlipConfig.maxShadowOpacity ?? 0.5}

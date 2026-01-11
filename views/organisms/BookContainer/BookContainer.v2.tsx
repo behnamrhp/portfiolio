@@ -24,7 +24,6 @@ const BookContainer: React.FC<BookContainerProps> = ({
     canGoPrevious,
   } = useBookNavigation({
     pages: pages.map((p) => ({ id: p.id, title: p.title, path: p.path })),
-    enableKeyboard: true,
   });
 
   // Support controlled component pattern

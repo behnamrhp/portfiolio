@@ -6,14 +6,14 @@ export type PageTurnDirection = 'forward' | 'backward' | null;
 interface UsePageTurnProps {
   totalPages: number;
   initialPage?: number;
-  onPageChange?: (page: number) => void;
+  onPageChange?: (page: number, shouldUpdateUrl?: boolean) => void;
 }
 
 interface UsePageTurnReturn {
   currentPage: number;
   turnDirection: PageTurnDirection;
   isAnimating: boolean;
-  goToPage: (page: number) => void;
+  goToPage: (page: number, shouldUpdateUrl?: boolean) => void;
   nextPage: () => void;
   previousPage: () => void;
   canGoNext: boolean;
@@ -34,7 +34,8 @@ export function usePageTurn({
   const [isAnimating, setIsAnimating] = useState(false);
 
   const goToPage = useCallback(
-    (targetPage: number) => {
+    (targetPage: number, shouldUpdateUrl: boolean = true) => {
+      
       if (
         targetPage === currentPage ||
         targetPage < 0 ||
@@ -49,17 +50,17 @@ export function usePageTurn({
       setIsAnimating(true);
       setTurnDirection(direction);
       
-      // Simulate page turn animation
+      // Update page state immediately (no artificial delay)
+      setCurrentPage(targetPage);
+      
+      // Notify parent component - pass shouldUpdateUrl flag
+      onPageChange?.(targetPage, shouldUpdateUrl);
+      
+      // Reset animation state
       setTimeout(() => {
-        setCurrentPage(targetPage);
-        onPageChange?.(targetPage);
-        
-        // Reset animation state
-        setTimeout(() => {
-          setTurnDirection(null);
-          setIsAnimating(false);
-        }, 100);
-      }, 600); // Animation duration
+        setTurnDirection(null);
+        setIsAnimating(false);
+      }, 100);
     },
     [currentPage, totalPages, isAnimating, onPageChange]
   );

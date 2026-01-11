@@ -1,6 +1,5 @@
 import { useEffect, useCallback, useState } from 'react';
 import { usePageTurn } from './usePageTurn';
-import { useKeyboardNavigation } from './useKeyboardNavigation';
 
 interface BookPage {
   id: string;
@@ -10,24 +9,36 @@ interface BookPage {
 
 interface UseBookNavigationProps {
   pages: BookPage[];
-  enableKeyboard?: boolean;
 }
 
 /**
  * Comprehensive hook for book navigation
- * Uses window.history API to update URL without React Router re-rendering
- * Integrates keyboard and page turn animations
+ * - Reads current page from URL on mount
+ * - Updates URL when navigating (using window.history.pushState)
+ * - Handles browser back/forward buttons
  */
 export function useBookNavigation({
   pages,
-  enableKeyboard = true,
 }: UseBookNavigationProps) {
-  // Get initial page from current URL
+  /**
+   * Find the initial page based on current URL
+   */
   const getInitialPage = useCallback(() => {
     if (typeof window === 'undefined') return 0;
+    
     const currentPath = window.location.pathname;
-    const pageIndex = pages.findIndex((page) => page.path === currentPath);
-    return pageIndex >= 0 ? pageIndex : 0;
+    
+    // Find matching page, but skip background page (it's not a real route)
+    const pageIndex = pages.findIndex(
+      (page) => page.path === currentPath && page.id !== 'bg'
+    );
+    
+    // If found, return it
+    if (pageIndex >= 0) return pageIndex;
+    
+    // Otherwise, default to cover page
+    const coverIndex = pages.findIndex((page) => page.id === 'cover');
+    return coverIndex >= 0 ? coverIndex : 0;
   }, [pages]);
 
   const [initialPage] = useState(getInitialPage);
@@ -44,40 +55,55 @@ export function useBookNavigation({
   } = usePageTurn({
     totalPages: pages.length,
     initialPage,
-    onPageChange: (pageIndex) => {
-      // Update URL using window.history API (no React Router navigation)
+    onPageChange: (pageIndex, shouldUpdateUrl = true) => {
       const targetPage = pages[pageIndex];
-      if (targetPage && typeof window !== 'undefined') {
-        const currentPath = window.location.pathname;
-        if (currentPath !== targetPage.path) {
-          // Use pushState to update URL without page reload
-          window.history.pushState(
-            { page: pageIndex, path: targetPage.path },
-            targetPage.title,
-            targetPage.path
-          );
-        }
+      if (!targetPage || typeof window === 'undefined') return;
+      
+      // Only update URL if requested (skip for browser back/forward navigation)
+      if (!shouldUpdateUrl) return;
+      
+      // Update URL using window.history.pushState (for user-initiated navigation)
+      const currentPath = window.location.pathname;
+      if (currentPath !== targetPage.path) {
+        window.history.pushState(
+          { page: pageIndex, path: targetPage.path },
+          targetPage.title,
+          targetPage.path
+        );
       }
     },
   });
 
-  // Handle browser back/forward buttons
+  /**
+   * Handle browser back/forward buttons
+   * When browser navigates, URL is already changed - just flip the page to match
+   * WITHOUT updating URL again (to avoid duplicate history entries)
+   */
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     const handlePopState = (event: PopStateEvent) => {
-      // Get page index from history state or URL
       let pageIndex = 0;
-      if (event.state && event.state.page !== undefined) {
+      
+      // Try to get page from history state first
+      if (event.state?.page !== undefined) {
         pageIndex = event.state.page;
       } else {
+        // Otherwise find by URL path (skip background page)
         const currentPath = window.location.pathname;
-        pageIndex = pages.findIndex((page) => page.path === currentPath);
-        if (pageIndex < 0) pageIndex = 0;
+        pageIndex = pages.findIndex(
+          (page) => page.path === currentPath && page.id !== 'bg'
+        );
+        if (pageIndex < 0) {
+          // Default to cover if not found
+          pageIndex = pages.findIndex((page) => page.id === 'cover') || 0;
+        }
       }
       
       if (pageIndex !== currentPage) {
-        goToPageInternal(pageIndex);
+        // Flip page WITHOUT updating URL (shouldUpdateUrl = false)
+        // because browser already changed the URL
+        goToPageInternal(pageIndex, false);
       }
     };
 
@@ -85,13 +111,18 @@ export function useBookNavigation({
     return () => window.removeEventListener('popstate', handlePopState);
   }, [pages, currentPage, goToPageInternal]);
 
-  // Handle custom navigate events from LinkText component
+  /**
+   * Handle custom navigate events from LinkText component
+   * Allows internal links to trigger page navigation
+   */
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     const handleNavigate = (event: CustomEvent<{ path: string }>) => {
       const path = event.detail.path;
-      const pageIndex = pages.findIndex((page) => page.path === path);
+      const pageIndex = pages.findIndex(
+        (page) => page.path === path && page.id !== 'bg'
+      );
       if (pageIndex >= 0 && pageIndex !== currentPage) {
         goToPageInternal(pageIndex);
       }
@@ -101,14 +132,20 @@ export function useBookNavigation({
     return () => window.removeEventListener('navigate', handleNavigate as EventListener);
   }, [pages, currentPage, goToPageInternal]);
 
-  // Initialize URL on mount if needed
+  /**
+   * Initialize URL on mount if current URL doesn't match any page
+   * Sets URL to the initial page we're displaying
+   */
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const currentPath = window.location.pathname;
-    const pageIndex = pages.findIndex((page) => page.path === currentPath);
     
-    // If URL doesn't match any page, update to current page
-    if (pageIndex < 0 && pages[currentPage]) {
+    const currentPath = window.location.pathname;
+    const matchingPage = pages.find(
+      (page) => page.path === currentPath && page.id !== 'bg'
+    );
+    
+    // If URL doesn't match any page, update it to current page's URL
+    if (!matchingPage && pages[currentPage]?.id !== 'bg') {
       window.history.replaceState(
         { page: currentPage, path: pages[currentPage].path },
         pages[currentPage].title,
@@ -116,12 +153,13 @@ export function useBookNavigation({
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Only run on mount - pages and currentPage are stable references
+  }, []); // Run once on mount
   
   // Wrapper functions that use internal navigation
+  // By default, user-initiated navigation DOES update the URL
   const goToPage = useCallback(
-    (pageIndex: number) => {
-      goToPageInternal(pageIndex);
+    (pageIndex: number, shouldUpdateUrl: boolean = true) => {
+      goToPageInternal(pageIndex, shouldUpdateUrl);
     },
     [goToPageInternal]
   );
@@ -133,13 +171,6 @@ export function useBookNavigation({
   const previousPage = useCallback(() => {
     previousPageInternal();
   }, [previousPageInternal]);
-  
-  // Keyboard navigation
-  useKeyboardNavigation({
-    onNext: nextPage,
-    onPrevious: previousPage,
-    enabled: enableKeyboard,
-  });
   
   const goToPageByPath = useCallback(
     (path: string) => {
