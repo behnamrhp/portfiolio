@@ -5,3 +5,7 @@ export { default as SkillsPage } from './SkillsPage';
 export { default as ProjectsPage } from './ProjectsPage';
 export { default as ArticlesPage } from './ArticlesPage';
 
+// Split page components for section-based routing
+export { AboutWhoPage, AboutHelpPage } from './AboutPage';
+export { SkillsPracticesPage, SkillsLanguagesPage, SkillsStackPage } from './SkillsPage';
+

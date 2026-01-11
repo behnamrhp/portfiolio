@@ -1,77 +1,87 @@
+import { useState, useEffect, useCallback } from 'react';
 import { BookContainer } from '@/views/organisms';
-import {
-  CoverPage,
-  AboutPage,
-  SkillsPage,
-  ProjectsPage,
-  ArticlesPage,
-} from '@/views/pages';
-import { ROUTES } from '@/input/constants';
-import { isMobile } from '@/input/turnConfig';
-import { useBookNavigation } from '@/viewmodels';
-
-const pages = [
-  ...(isMobile() ? [] : [
-    {
-      id: 'bg',
-      title: 'Background',
-      path: "/", // Unique path for background page (not meant to be directly routed)
-      content: null,
-    },
-  ]),
-  {
-    id: 'cover',
-    title: 'Cover',
-    path: ROUTES.COVER,
-    content: <CoverPage />,
-  },
-  {
-    id: 'about',
-    title: 'About',
-    path: ROUTES.ABOUT,
-    content: <AboutPage />,
-  },
-  {
-    id: 'skills',
-    title: 'Skills',
-    path: ROUTES.SKILLS,
-    content: <SkillsPage />,
-  },
-  {
-    id: 'projects',
-    title: 'Projects',
-    path: ROUTES.PROJECTS,
-    content: <ProjectsPage />,
-  },
-  {
-    id: 'articles',
-    title: 'Articles',
-    path: ROUTES.ARTICLES,
-    content: <ArticlesPage />,
-  },
-];
-
+import { 
+  sections, 
+  flattenSections, 
+  getSectionByPageIndex, 
+  getFirstPageIndexByPath 
+} from './sections';
 
 /**
- * BookLayout - Main book component with URL routing
+ * BookLayout - Main book component with section-based URL routing
  * 
- * Flow:
- * 1. useBookNavigation reads URL and determines initial page
- * 2. currentPage state is passed to BookContainer
- * 3. When user flips page, BookContainer calls onPageChange
- * 4. goToPage updates state and URL via window.history.pushState
- * 5. URL updates without page reload
+ * Architecture:
+ * - Sections: Logical content areas (About, Skills, etc.) with one URL path
+ * - Physical Pages: What users see and flip through
+ * - One section can have multiple physical pages
+ * - URL changes only when navigating between sections
+ * 
+ * Example:
+ * - About section (/about) has 2 physical pages
+ * - Flipping within About: URL stays /about
+ * - Flipping from About to Skills: URL changes to /skills
  */
 export function BookLayout() {
-  const { currentPage, goToPage } = useBookNavigation({
-    pages,
-  });
-
+  // Flatten sections into page array
+  const flatPages = flattenSections(sections);
+  
+  // Get initial page from URL
+  const getInitialPage = useCallback(() => {
+    if (typeof window === 'undefined') return 0;
+    const currentPath = window.location.pathname;
+    return getFirstPageIndexByPath(flatPages, currentPath);
+  }, [flatPages]);
+  
+  const [currentPage, setCurrentPage] = useState(getInitialPage);
+  
+  // Handle page change
+  const handlePageChange = useCallback((newPageIndex: number) => {
+    if (newPageIndex < 0 || newPageIndex >= flatPages.length) return;
+    
+    const currentSection = getSectionByPageIndex(flatPages, currentPage);
+    const newSection = getSectionByPageIndex(flatPages, newPageIndex);
+    
+    // Update page state
+    setCurrentPage(newPageIndex);
+    
+    // Update URL only if section changed
+    if (currentSection?.id !== newSection?.id && newSection) {
+      
+      window.history.pushState(
+        { page: newPageIndex, section: newSection.id },
+        newSection.title,
+        newSection.path
+      );
+    }
+  }, [currentPage, flatPages]);
+  
+  // Handle browser back/forward
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const handlePopState = () => {
+      const currentPath = window.location.pathname;
+      const pageIndex = getFirstPageIndexByPath(flatPages, currentPath);
+      setCurrentPage(pageIndex);
+    };
+    
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [flatPages]);
+  
+  // Convert flat pages to format BookContainer expects
+  const bookPages = flatPages.map(page => ({
+    id: page.id,
+    title: page.title,
+    path: page.sectionPath,
+    content: page.content,
+  }));
+  
   return (
     <BookContainer 
-      pages={pages} 
+      pages={bookPages} 
       currentPage={currentPage}
-      onPageChange={goToPage}
+      onPageChange={handlePageChange}
     />
   );
 }

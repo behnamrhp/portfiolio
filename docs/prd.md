@@ -87,48 +87,67 @@ personal portfolio website for a persian software engineer to show my abilities,
 
 **Main use cases**
 
-- Each page of the book should be attached to one path in the url.  
-- Users on scroll should turn the page and the path should be changed without refreshing the page. (On to many scroll shouldn’t make too many turning page and consider technique as deferred or throttle for many scroll)  
+- Each **section** of the book (not each physical page) should be attached to one path in the url.
+  - Example: "About" section at `/about` has 2 physical pages, but URL stays `/about` for both
+  - URL changes only when navigating to a different section (e.g., `/about` → `/skills`)
 - Users should be able to turn the page with back and forward buttons on the keyboard.  
 - Users on the screen should have buttons on sides of the screen to turn the page which is flesh in the style of ancient persian style.  
-- Above each page should have a bookmark which overflowed from top of the book and on this bookmark, written name of the page and it’s clickable and clicking on each bookmark should turn the page to that bookmark.  
-- All bookmarks should cover each other so based on the width of each bookmark after each page should have bookmarks next to each other.  
-- Bookmarks should overflow with the book and if all pages are finished just attach the rest of the bookmarks at the end of book width.  
-- The height and width of the screen shouldn’t get scrolled and just the inside of the book can be scrolled.  
-- Portfolio should have all these pages:  
-  - Cover of the book which is image and title of the book which is root of the project  
-  - Who is he? Which has about him and which one of your problems he can solve  
-  - His skills  
-  - His projects  
-  - His articles
+- Above each **section** should have a bookmark which overflowed from top of the book with the section name. Clicking on a bookmark navigates to that section's first page.
+- All bookmarks should cover each other so based on the width of each bookmark after each section should have bookmarks next to each other.  
+- Bookmarks should overflow with the book and if all sections are finished just attach the rest of the bookmarks at the end of book width.  
+- The height and width of the screen shouldn't get scrolled.
+- **Fixed page structure per section:**
+  - **About section** (`/about`): 2 pages
+    - Page 1: "Who is he?" content
+    - Page 2: "Which parts can he help you with?" content
+  - **Skills section** (`/skills`): 3 pages
+    - Page 1: Software Engineering Practices & Architectures
+    - Page 2: Languages + Automation & Infrastructure (combined on one page, separate components)
+    - Page 3: Backend + Frontend (combined on one page, separate components)
+  - **Projects section** (`/projects`): 2 pages
+    - Page 1: First 2 projects
+    - Page 2: Next 2-3 projects
+  - **Articles section** (`/articles`): 1 page
+    - All articles with pagination controls on single page  
+- Portfolio should have all these **sections** with fixed page counts:  
+  - **Cover** - Book cover with image and title (root path `/`) - 1 page
+  - **About** (`/about`) - 2 pages:
+    - Page 1: Who is he?
+    - Page 2: Which parts can he help you with?
+  - **Skills** (`/skills`) - 3 pages:
+    - Page 1: Software Engineering Practices & Architectures
+    - Page 2: Languages + Automation & Infrastructure
+    - Page 3: Backend + Frontend
+  - **Projects** (`/projects`) - 2 pages:
+    - Page 1: Projects 1-2
+    - Page 2: Projects 3-4
+  - **Articles** (`/articles`) - 1 page with pagination controls
 
-**Per page use cases**
+**Per section use cases**
 
-- **Root page which is book cover**  
+**Note:** Each section has a fixed number of pages. URL only changes when navigating between sections, not between pages within a section.
+
+- **Cover section** (Path: `/`)  
   - Cover page should be hard book not like other project to fill hard fancy thick cover and its image should come from assets/images/cover-page.png
   - Cover should contain my image at its center and should be loaded from assets folder and uses nextjs image component which is assets/images/me.jpg.  
   - Cover should contain title as: A Persian Engineer and its font should be Cormorant.
 
-- **Who is he page**  
-  - This page should have these sections:  
-    - Who is he? This is the title and content should be grammar correct version of this for both language which can be switched: Behnam rahimpour, a Persian musician with national awards in classical music which in his early 20’th ages through his military service, turned to (should be bold) a software engineer and now he has over 8 years of experience (number of the years should be minus of current year and 2018 to be dynamic) in building software which can help companies and team in defining business requirements, technical and system design, development, tests, maintenance, observability and infrastructure of softwares. He has experiences with developing and leading in several international agile based cross-functional teams during his career in frontend and backend part. Also he has many stories about his challenges with team management in several agile based atmospheres on several different industries, that’s why he has confidence on solving team managements and problems of teams about designing team and development process based on each business challenges and emphasising on leveraging ownership of team members not just theoretical agile methodologies. His main philosophy about success in the software teams is having ownership by defining automated learning loops and leveraging AI to automate the repetitive processes and achieve better qualities.  
-    - Which parts can he help you with?  
+- **About section** (Path: `/about`) - 2 pages
+  - **Page 1 - "Who is he?":**  
+    - Title: "Who is he?"
+    - Content: Behnam rahimpour, a Persian musician with national awards in classical music which in his early 20'th ages through his military service, turned to (should be bold) a software engineer and now he has over 8 years of experience (number of the years should be minus of current year and 2018 to be dynamic) in building software which can help companies and team in defining business requirements, technical and system design, development, tests, maintenance, observability and infrastructure of softwares. He has experiences with developing and leading in several international agile based cross-functional teams during his career in frontend and backend part. Also he has many stories about his challenges with team management in several agile based atmospheres on several different industries, that's why he has confidence on solving team managements and problems of teams about designing team and development process based on each business challenges and emphasising on leveraging ownership of team members not just theoretical agile methodologies. His main philosophy about success in the software teams is having ownership by defining automated learning loops and leveraging AI to automate the repetitive processes and achieve better qualities.
+  - **Page 2 - "Which parts can he help you with?":**
+    - Title: "Which parts can he help you with?"
+    - Content:  
       - If you have a team whose performance decreases or their development pace decreases but you don’t know why?  
       - If you have a product whose performance is low or your business entered to another level but your product cannot handle more users.  
       - If you want to create a product but you care about performance of your future product and want someone to help you design your product system, manage a team and develop your product.  
       - If you wanna leverage ai in your application.  
       - If on your production product, getting trouble but cannot address the issue or it takes too much time to find the issue.  
-    - At the end of this page should have a link of his cv which is a constant inside of input/contanst.ts which is inside of it’s CV\_LINK so I can find it fast and update it whenever I want.  
-- **His skills Page**  
-  - This page should have these categorized sections and skills:  
-    - Languages  
-      - Golang  
-      - Typescript  
-      - Dart  
-      - Python  
-      - Bash  
-      - PHP  
-    - Software engineering practices and architectures  
+    - At the end of this page should have a link of his cv which is a constant inside of input/contanst.ts which is inside of it's CV\_LINK so I can find it fast and update it whenever I want.
+- **Skills section** (Path: `/skills`) - 3 pages
+  - **Page 1 - Software Engineering Practices & Architectures:**  
+    - Software engineering practices and architectures (text only, no logos):
       - Microservices, Monolith, Modular Monolith  
       - MV\* architectural pattern  
       - System Design  
@@ -140,8 +159,16 @@ personal portfolio website for a persian software engineer to show my abilities,
       - UML Diagrams  
       - Agile Methodologies  
       - TDD/BDD  
-      - Unit-testing, Integration test and e2e test.  
-    - Automation and infrastructure:  
+      - Unit-testing, Integration test and e2e test.
+  - **Page 2 - Languages + Automation & Infrastructure:**
+    - **Languages section (first half of page):**
+      - Golang  
+      - Typescript  
+      - Dart  
+      - Python  
+      - Bash  
+      - PHP
+    - **Automation and infrastructure section (second half of page):**  
       - Docker  
       - AWS  
       - Kubernetes  
@@ -150,8 +177,9 @@ personal portfolio website for a persian software engineer to show my abilities,
       - Ansible  
       - Fluxcd  
       - Jenkins  
-      - Github Actions  
-    - Backend  
+      - Github Actions
+  - **Page 3 - Backend + Frontend:**
+    - **Backend section (first half of page):**  
       - [Nest.js](http://Nest.js)  
       - MongoDB  
       - Redis  
@@ -167,8 +195,8 @@ personal portfolio website for a persian software engineer to show my abilities,
       - Grafana  
       - Promtail, Loki  
       - GraphQL  
-      - Websocket  
-    - Frontend  
+      - Websocket
+    - **Frontend section (second half of page):**  
       - React  
       - Next.js  
       - Flutter  
@@ -192,9 +220,8 @@ personal portfolio website for a persian software engineer to show my abilities,
     - On click each title should lead to document of technology.  
     - Each logo should be square with a small border radius like other borders with same variable.  
     - List of technologies should be an object in input folder as skills.ts and should be object with key value and separated by categories so in future I can easily update the list.  
-    - Each skill object in side of category object should have, title, image and document link.  
-    -   
-- **His opensource projects Page**  
+    - Each skill object in side of category object should have, title, image and document link.
+- **Projects section** (Path: `/projects`) - 2 pages  
   - In this page each row should define one project and each project should have title, description, optional screenshot image and list of links which each item should be title of link and url of link.  
   - This object should be in input folder as project.ts so I can update it later whenever I want.  
   - This page should have these projects:  
@@ -230,11 +257,53 @@ personal portfolio website for a persian software engineer to show my abilities,
       - Link:  
         - Title: Nelify  
         - URL: [https://teaching-whiteboard.netlify.app/](https://teaching-whiteboard.netlify.app/)  
-      - Description: One of his projects which he made after two years of development which he made for teachers to let them have an online board with all drawing tools, adding any pdf or image and highlight on them and also record themselves.  
-- Articles page  
+      - Description: One of his projects which he made after two years of development which he made for teachers to let them have an online board with all drawing tools, adding any pdf or image and highlight on them and also record themselves.
+  - **Page 1:** Display projects 1-2
+  - **Page 2:** Display projects 3-4 (or 3-5 if we have 5 projects)
+  - URL remains `/projects` for both pages
+- **Articles section** (Path: `/articles`) - 1 page  
   - In this page, we should get the articles list from [dev.to](http://dev.to) website based on this doc :[https://developers.forem.com/api/v0\#tag/articles/operation/getArticles](https://developers.forem.com/api/v0#tag/articles/operation/getArticles)  
   - For each row should show on article which shows number view of each article, title and image and on click this row should another tab lead user to article link.  
   - Articles list shouldn’t be prerendered and should on ui each time after load the page from frontend fetch the article so alway can have last updates not one time rendered results.  
   - On loading info to get articles should show skeleton loading and on error should show message that we got issue on connecting to [dev.t](http://dev.to)o as our articles center, please try again later.  
-  - This list should be paginated and at most should show 8 articles.  
+  - This list should be paginated and at most should show 8 articles per view.
+  - All articles and pagination controls fit on one page
   - You should api key from env as ARTICLE\_API\_KEY
+
+## Section-Based Routing Architecture
+
+**Important architectural notes:**
+
+1. **Sections vs Physical Pages:**
+   - A **section** is a logical content area (About, Skills, Projects, Articles)
+   - A **physical page** is what users see and flip through in the book
+   - One section has a fixed number of physical pages
+
+2. **Fixed Page Structure:**
+   - Cover: 1 page
+   - About: 2 pages
+   - Skills: 3 pages
+   - Projects: 2 pages
+   - Articles: 1 page
+   - **Total: 9 physical pages**
+
+3. **URL Routing:**
+   - URL represents the **section**, not the physical page
+   - Example: `/skills` section with 3 pages:
+     - Physical page 1 of Skills: URL = `/skills`
+     - Physical page 2 of Skills: URL = `/skills`
+     - Physical page 3 of Skills: URL = `/skills`
+   - URL only changes when user navigates to a different section:
+     - User on page 3 of `/skills` → flips to Projects → URL = `/projects`
+
+4. **Bookmark Behavior:**
+   - Each bookmark represents a **section**, not individual physical pages
+   - Clicking "Skills" bookmark navigates to the first page of Skills section
+   - Bookmark remains active for all physical pages within that section (pages 1, 2, and 3)
+
+5. **Implementation Approach:**
+   - Define fixed page structure for each section
+   - Create separate page components for each physical page
+   - Track current section and current physical page within section
+   - Update URL only on section changes
+   - Maintain section context across physical page navigation
