@@ -8,7 +8,6 @@ export interface Dictionary {
     title: string;
     whoIsHe: {
       title: string;
-      content: string;
     };
     help: {
       title: string;

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Heading, BodyText } from '../../atoms/Typography';
-import Divider from '../../atoms/Divider';
 import PageLayout from '../../organisms/PageLayout';
 import { dict, skills } from '@/input';
 
@@ -14,16 +13,7 @@ const SkillsPracticesPage: React.FC = () => {
       title={dict.skills.title}
       className="px-4 md:px-8"
     >
-      <div className="space-y-8">
-        {/* Drag hint */}
-        <div className="bg-manuscript-lapis bg-opacity-10 border-l-4 border-manuscript-lapis p-4 rounded-sm">
-          <BodyText size="sm" className="italic">
-            💡 {dict.skills.dragHint}
-          </BodyText>
-        </div>
-        
-        <Divider dividerStyle="ornamental" />
-        
+      <div>
         {/* Software Engineering Principles - Text Only */}
         <section>
           <Heading level="h3" className="mb-4">
@@ -58,12 +48,7 @@ const SkillsPracticesPage: React.FC = () => {
           </div>
         </section>
         
-        {/* Footer note */}
-        <div className="text-center pt-8">
-          <BodyText size="sm" className="opacity-60">
-            Flip to next page to see technical stack with logos
-          </BodyText>
-        </div>
+       
       </div>
     </PageLayout>
   );

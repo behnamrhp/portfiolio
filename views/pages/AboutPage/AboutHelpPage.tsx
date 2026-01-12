@@ -18,11 +18,11 @@ const AboutHelpPage: React.FC = () => {
       <div className="space-y-8">
         {/* Which parts can he help you with? Section */}
         <section>
-          <Heading level="h3" className="mb-6">
+          <Heading level="h3" className="mb-8">
             {dict.about.help.title}
           </Heading>
           
-          <div className="space-y-4">
+          <div >
             {dict.about.help.items.map((item, index) => (
               <div
                 key={index}
@@ -57,7 +57,7 @@ const AboutHelpPage: React.FC = () => {
         <Divider />
         
         {/* CV Download Section */}
-        <section className="flex flex-col items-center gap-4 py-6">
+        <section className="flex border-t border-manuscript-ink border-opacity-20 flex-col items-center gap-4 py-6">
           <BodyText size="lg" className="text-center opacity-80">
             Interested in working together?
           </BodyText>

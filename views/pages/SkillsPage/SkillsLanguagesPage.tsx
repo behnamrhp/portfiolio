@@ -20,6 +20,14 @@ const SkillsLanguagesPage: React.FC = () => {
       className="px-4 md:px-8"
     >
       <div className="space-y-8">
+                {/* Drag hint */}
+        <div className="bg-manuscript-lapis bg-opacity-10 border-l-4 border-manuscript-lapis p-4 rounded-sm">
+          <BodyText size="sm" className="italic">
+            💡 {dict.skills.dragHint}
+          </BodyText>
+        </div>
+        
+        <Divider dividerStyle="ornamental" />
         {/* Languages Section */}
         <section>
           <Heading level="h3" className="mb-6">

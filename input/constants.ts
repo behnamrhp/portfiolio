@@ -19,7 +19,7 @@ export const ROUTES = {
 
 // Calculate years of experience dynamically
 export const getYearsOfExperience = (): number => {
-  const startYear = 2018;
+  const startYear = 2019;
   const currentYear = new Date().getFullYear();
   return currentYear - startYear;
 };

@@ -1,7 +1,5 @@
 import React from 'react';
 import { PageLayoutProps } from './PageLayout.types';
-import { Heading, BodyText } from '../../atoms/Typography';
-import Divider from '../../atoms/Divider';
 
 const PageLayout: React.FC<PageLayoutProps> = ({
   title,
@@ -22,7 +20,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   return (
     <div className={combinedClassName} {...props}>
       {/* Header */}
-      {(title || subtitle) && (
+      {/* {(title || subtitle) && (
         <div className="mb-6">
           {title && (
             <Heading level="h2" className="mb-2">
@@ -38,7 +36,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
           
           <Divider dividerStyle="ornamental" className="mt-4" />
         </div>
-      )}
+      )} */}
       
       {/* Content */}
       <div className="flex-1 overflow-y-auto">

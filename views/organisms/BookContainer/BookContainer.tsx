@@ -223,7 +223,6 @@ const BookContainer: React.FC<BookContainerProps> = ({
                 backgroundRepeat: 'no-repeat',
               }} className='fixed top-0 left-0 z-0' >
 
-                test
               </div>
             )}
             <div className="font-garamond h-full overflow-auto p-6 md:p-8 lg:p-12 relative z-10">
@@ -272,6 +271,7 @@ const BookContainer: React.FC<BookContainerProps> = ({
         {/* FlipBook - react-pageflip container */}
         <HTMLFlipBook
           ref={flipBookRef}
+          disableFlipByClick={true}
           width={bookSize.width}
           height={bookSize.height}
           minWidth={bookSize.width}
@@ -292,7 +292,6 @@ const BookContainer: React.FC<BookContainerProps> = ({
           useMouseEvents={pageFlipConfig.useMouseEvents}
           swipeDistance={pageFlipConfig.swipeDistance}
           showPageCorners={pageFlipConfig.showPageCorners ?? false}
-          disableFlipByClick={pageFlipConfig.disableFlipByClick}
           onFlip={handleFlip}
           className="flipbook-container"
           style={{}}
