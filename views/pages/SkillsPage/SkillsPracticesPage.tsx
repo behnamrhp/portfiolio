@@ -2,12 +2,15 @@ import React from 'react';
 import { Heading, BodyText } from '../../atoms/Typography';
 import PageLayout from '../../organisms/PageLayout';
 import { dict, skills } from '@/input';
+import { SkillIcon } from '@/views/molecules';
 
 /**
  * Skills Section - Page 1: Software Engineering Practices & Architectures
  * Shows software engineering principles and best practices (text only, no logos)
  */
 const SkillsPracticesPage: React.FC = () => {
+  const languagesCategory = skills.categories[0];
+
   return (
     <PageLayout
       title={dict.skills.title}
@@ -44,6 +47,23 @@ const SkillsPracticesPage: React.FC = () => {
                   {principle}
                 </BodyText>
               </div>
+            ))}
+          </div>
+        </section>
+
+         {/* Languages Section */}
+        <section className='mt-8'>
+          <Heading level="h3" className="mb-6">
+            {languagesCategory.title}
+          </Heading>
+          
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {languagesCategory.skills.map((skill, skillIndex) => (
+              <SkillIcon
+                key={skillIndex}
+                skill={skill}
+                className="transition-transform hover:scale-105"
+              />
             ))}
           </div>
         </section>

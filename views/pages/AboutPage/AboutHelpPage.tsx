@@ -83,10 +83,6 @@ const AboutHelpPage: React.FC = () => {
           >
             {dict.about.cvLink.text}
           </Button>
-          
-          <BodyText size="sm" className="opacity-60">
-            PDF · Updated {new Date().getFullYear()}
-          </BodyText>
         </section>
       </div>
     </PageLayout>

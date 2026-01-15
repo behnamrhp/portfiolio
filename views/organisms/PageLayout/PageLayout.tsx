@@ -14,6 +14,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
     flex-col
     h-full
     w-full
+    overflow-x-visible
     ${className}
   `.trim();
   
@@ -39,7 +40,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       )} */}
       
       {/* Content */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-visible">
         {children}
       </div>
       

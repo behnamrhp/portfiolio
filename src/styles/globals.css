@@ -36,11 +36,11 @@ body {
 
 /* Custom pointer cursor for interactive elements */
 a, button, [role="button"], .cursor-pointer, input[type="button"], input[type="submit"] {
-  cursor: url('/assets/images/logos/pointer.png') 30 0, pointer !important;
+  cursor: url('/assets/images/logos/pointer.png') 10 0, pointer !important;
 }
 
 a:hover *, button:hover * {
-  cursor: url('/assets/images/logos/pointer.png') 30 0, pointer !important;
+  cursor: url('/assets/images/logos/pointer.png') 0 0, pointer !important;
 }
 
 
@@ -94,4 +94,5 @@ html {
     background: #1F4E79;
   }
 }
+
 

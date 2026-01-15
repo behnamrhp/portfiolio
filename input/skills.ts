@@ -23,32 +23,32 @@ export const skills: Skills = {
       skills: [
         {
           title: "Golang",
-          image: "/assets/images/logos/golang.svg",
+          image: "/assets/images/logos/golang.png",
           documentLink: "https://go.dev/doc/",
         },
         {
           title: "TypeScript",
-          image: "/assets/images/logos/typescript.svg",
+          image: "/assets/images/logos/typescript.png",
           documentLink: "https://www.typescriptlang.org/docs/",
         },
         {
           title: "Dart",
-          image: "/assets/images/logos/dart.svg",
+          image: "/assets/images/logos/dart.png",
           documentLink: "https://dart.dev/guides",
         },
         {
           title: "Python",
-          image: "/assets/images/logos/python.svg",
+          image: "/assets/images/logos/python.png",
           documentLink: "https://docs.python.org/",
         },
         {
           title: "Bash",
-          image: "/assets/images/logos/bash.svg",
+          image: "/assets/images/logos/bash.png",
           documentLink: "https://www.gnu.org/software/bash/manual/",
         },
         {
           title: "PHP",
-          image: "/assets/images/logos/php.svg",
+          image: "/assets/images/logos/php.png",
           documentLink: "https://www.php.net/docs.php",
         },
       ],
@@ -58,27 +58,22 @@ export const skills: Skills = {
       skills: [
         {
           title: "Docker",
-          image: "/assets/images/logos/docker.svg",
+          image: "/assets/images/logos/docker.png",
           documentLink: "https://docs.docker.com/",
         },
         {
           title: "AWS",
-          image: "/assets/images/logos/aws.svg",
+          image: "/assets/images/logos/aws.png",
           documentLink: "https://docs.aws.amazon.com/",
         },
         {
           title: "Kubernetes",
-          image: "/assets/images/logos/kubernetes.svg",
+          image: "/assets/images/logos/kubernetes.png",
           documentLink: "https://kubernetes.io/docs/",
         },
         {
-          title: "Docker-Swarm",
-          image: "/assets/images/logos/docker-swarm.svg",
-          documentLink: "https://docs.docker.com/engine/swarm/",
-        },
-        {
           title: "Terraform",
-          image: "/assets/images/logos/terraform.svg",
+          image: "/assets/images/logos/terraform.png",
           documentLink: "https://www.terraform.io/docs",
         },
         {
