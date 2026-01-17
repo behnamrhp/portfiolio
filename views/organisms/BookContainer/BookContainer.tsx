@@ -237,7 +237,7 @@ const BookContainer: React.FC<BookContainerProps> = ({
   return (
     <div className={combinedClassName} {...props}>
       {/* Bookmarks */}
-      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 z-20 pointer-events-none">
+      <div className="absolute top-10 left-1/2 transform -translate-x-1/2 z-20 pointer-events-none">
         <div className="relative pointer-events-auto">
           {pages.map((page, index) => (
             <Bookmark

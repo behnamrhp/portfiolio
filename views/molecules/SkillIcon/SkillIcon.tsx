@@ -1,6 +1,5 @@
 import React from 'react';
 import { SkillIconProps } from './SkillIcon.types';
-import ImageWrapper from '../../atoms/ImageWrapper';
 import { LinkText } from '../../atoms/Typography';
 
 const SkillIcon: React.FC<SkillIconProps> = ({
@@ -41,10 +40,11 @@ const SkillIcon: React.FC<SkillIconProps> = ({
       onClick={handleClick}
       {...props}
     >
-      <div className="w-16 h-14 flex items-center justify-center">
-        <ImageWrapper
+      <div className="w-18 h-16 p-1 overflow-visible flex items-center justify-center">
+        <img
           src={skill.image}
           alt={skill.title}
+          className='w-32 mt-3 mb-3 object-cover'
         />
       </div>
       <LinkText
