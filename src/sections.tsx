@@ -151,6 +151,8 @@ export interface FlatPage {
   sectionTitle: string;
   sectionPath: string;
   globalIndex: number;
+  isFirstPageOfSection: boolean; // New: indicates if this is the first page of its section
+  sectionPageIndex: number; // New: page index within its section (0-based)
 }
 
 export function flattenSections(sections: Section[]): FlatPage[] {
@@ -158,13 +160,15 @@ export function flattenSections(sections: Section[]): FlatPage[] {
   let globalIndex = 0;
   
   sections.forEach(section => {
-    section.pages.forEach(page => {
+    section.pages.forEach((page, pageIndex) => {
       flatPages.push({
         ...page,
         sectionId: section.id,
         sectionTitle: section.title,
         sectionPath: section.path,
         globalIndex: globalIndex++,
+        isFirstPageOfSection: pageIndex === 0,
+        sectionPageIndex: pageIndex,
       });
     });
   });

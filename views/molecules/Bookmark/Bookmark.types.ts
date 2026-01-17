@@ -1,11 +1,13 @@
-import { HTMLAttributes } from 'react';
+import { HTMLAttributes, CSSProperties } from 'react';
 
 export interface BookmarkProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
   isActive?: boolean;
   onClick?: () => void;
-  position: number; // Position from left in pixels or percentage
+  pageNumber: number; // Page number for positioning (0-indexed)
+  bookLeftPosition?: number; // Left position of the book for calculating bookmark position
   className?: string;
+  style?: CSSProperties; // Allow custom styles for positioning
 }
 
 

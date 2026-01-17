@@ -75,6 +75,8 @@ export function BookLayout() {
     title: page.title,
     path: page.sectionPath,
     content: page.content,
+    sectionTitle: page.sectionTitle,
+    isFirstPageOfSection: page.isFirstPageOfSection,
   }));
   
   return (

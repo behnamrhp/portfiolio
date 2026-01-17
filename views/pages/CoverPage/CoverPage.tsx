@@ -14,7 +14,6 @@ import { dict, getBookSizes } from '@/input';
 const CoverPage: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center h-full bg-transparent relative">
-      
         {/* Title */}
         <div className="text-center">
           <h1

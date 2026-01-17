@@ -1,6 +1,5 @@
 import React from 'react';
 import { Heading, BodyText } from '../../atoms/Typography';
-import Divider from '../../atoms/Divider';
 import SkillIcon from '../../molecules/SkillIcon';
 import PageLayout from '../../organisms/PageLayout';
 import { dict, skills } from '@/input';
@@ -20,10 +19,6 @@ const SkillsLanguagesPage: React.FC = () => {
       className="px-4 md:px-8"
     >
       <div className="space-y-8">
-       
-        
-        <Divider />
-        
         {/* Automation & Infrastructure Section */}
         <section>
           <Heading level="h3" className="mb-6">
@@ -43,7 +38,7 @@ const SkillsLanguagesPage: React.FC = () => {
 
         {/* Backend Section */}
         <section>
-          <Heading level="h3" className="mb-6">
+          <Heading level="h3" className="mb-4">
             {backendCategory.title}
           </Heading>
           
@@ -58,10 +53,9 @@ const SkillsLanguagesPage: React.FC = () => {
           </div>
         </section>
         
-        <Divider />
         
         {/* Footer note */}
-        <div className="text-center pt-4">
+        <div className="text-center">
           <BodyText size="sm" className="opacity-60">
             Click any logo to visit its official documentation
           </BodyText>

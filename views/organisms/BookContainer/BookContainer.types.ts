@@ -5,6 +5,8 @@ export interface BookPage {
   title: string;
   content?: ReactNode;
   path: string;
+  sectionTitle?: string;
+  isFirstPageOfSection?: boolean;
 }
 
 export interface BookContainerProps extends HTMLAttributes<HTMLDivElement> {

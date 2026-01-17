@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import HTMLFlipBook from 'react-pageflip';
 import { BookContainerProps } from './BookContainer.types';
-import Bookmark from '../../molecules/Bookmark';
 import NavigationArrow from '../../molecules/NavigationArrow';
+import Bookmark from '../../molecules/Bookmark';
 import { getResponsivePageFlipConfig, getBookSizes, SIZE_CONFIG, isMobile } from '@/input';
 import { useKeyboardNavigation } from '@/viewmodels';
 
@@ -42,11 +42,22 @@ const BookContainer: React.FC<BookContainerProps> = ({
   ...props
 }) => {
   const flipBookRef = useRef<any>(null);
+  const bookContainerRef = useRef<HTMLDivElement>(null);
   const [currentPage, setCurrentPage] = useState(controlledPage ?? 0);
+  const [bookTopPosition, setBookTopPosition] = useState<number>(0);
+  const [bookLeftPosition, setBookLeftPosition] = useState<number>(0);
   const isInitializedRef = useRef(false);
   const bookSize = getBookSizes();
   const isMobileScreen = isMobile();
   const initialStartPage = controlledPage ?? 0;
+
+  // Define bookmarks for main section pages
+  const bookmarks = [
+    { pageIndex: isMobileScreen ? 1 : 2, title: 'About', pageNumber: 1 },
+    { pageIndex: isMobileScreen ? 3 : 4, title: 'Skills', pageNumber: 2 },
+    { pageIndex: isMobileScreen ? 5 : 6, title: 'Projects', pageNumber: 3 },
+    { pageIndex: isMobileScreen ? 7 : 8, title: 'Articles', pageNumber: 4 },
+  ];
 
   const getPageFlip = useCallback(() => {
     if (!flipBookRef.current) return null;
@@ -86,6 +97,22 @@ const BookContainer: React.FC<BookContainerProps> = ({
     return () => clearTimeout(timer);
   }, []);
 
+  // Calculate book's top and left position for bookmark placement
+  useEffect(() => {
+    const updateBookPosition = () => {
+      if (bookContainerRef.current) {
+        const rect = bookContainerRef.current.getBoundingClientRect();
+        setBookTopPosition(rect.top - 62);
+        setBookLeftPosition(rect.left + (rect.width / 2) - 30);
+      }
+    };
+
+    setTimeout(() => {
+      updateBookPosition();
+    }, 500);
+
+  }, []);
+
   // Handle controlled page changes from parent (keyboard, URL, etc.)
   // This is where we use React PageFlip's turnToPage method
   useEffect(() => {
@@ -102,18 +129,6 @@ const BookContainer: React.FC<BookContainerProps> = ({
       console.warn('Error changing page:', e);
     }
   }, [controlledPage, pages.length]);
-
-  const goToPage = (pageIndex: number) => {
-    const pageFlip = getPageFlip();
-    if (!pageFlip) return;
-
-    try {
-      if (pageIndex < 0 || pageIndex >= pages.length) return;
-      pageFlip.turnToPage(pageIndex);
-    } catch (e) {
-      console.warn('Error in goToPage:', e);
-    }
-  };
 
   // Navigation functions that directly use React PageFlip methods
   // These are called by BOTH arrow buttons AND keyboard
@@ -152,11 +167,6 @@ const BookContainer: React.FC<BookContainerProps> = ({
     enabled: true,
   });
 
-  const getBookmarkPosition = (index: number) => {
-    const bookmarkWidth = 100;
-    const overlap = 20;
-    return index * (bookmarkWidth - overlap);
-  };
 
   const combinedClassName = `
     relative
@@ -236,23 +246,25 @@ const BookContainer: React.FC<BookContainerProps> = ({
 
   return (
     <div className={combinedClassName} {...props}>
-      {/* Bookmarks */}
-      <div className="absolute top-10 left-1/2 transform -translate-x-1/2 z-20 pointer-events-none">
-        <div className="relative pointer-events-auto">
-          {pages.map((page, index) => (
-            <Bookmark
-              key={page.id}
-              title={page.title}
-              isActive={index === currentPage}
-              onClick={() => goToPage(index)}
-              position={getBookmarkPosition(index)}
-            />
-          ))}
-        </div>
-      </div>
+      {/* Bookmarks - Rendered once for all main section pages */}
+      {bookmarks.map((bookmark) => {
+        return (
+          <Bookmark
+            key={bookmark.pageIndex}
+            title={bookmark.title}
+            isActive={currentPage === bookmark.pageIndex}
+            pageNumber={bookmark.pageNumber}
+            bookLeftPosition={bookLeftPosition}
+            style={{
+              position: 'fixed',
+              top: bookTopPosition > 0 && bookLeftPosition > 0  ? `${bookTopPosition}px` : '50vh',
+            }}
+          />
+        );
+      })}
 
       {/* Book Container with react-pageflip */}
-      <div className="relative">
+      <div ref={bookContainerRef} className="relative">
         {/* Navigation Arrows */}
         <NavigationArrow
           direction="left"
