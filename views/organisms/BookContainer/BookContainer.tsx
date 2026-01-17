@@ -159,6 +159,24 @@ const BookContainer: React.FC<BookContainerProps> = ({
       console.warn('Error in previousPage:', e);
     }
   }, [getPageFlip]);
+
+  // Navigate to a specific page (used by bookmarks)
+  const goToPage = useCallback((targetPageIndex: number) => {
+    const pageFlip = getPageFlip();
+    if (!pageFlip) return;
+
+    try {
+      if (targetPageIndex < 0 || targetPageIndex >= pages.length) return;
+      const currentPageNum = pageFlip.getCurrentPageIndex();
+      
+      // Only navigate if we're not already on that page
+      if (currentPageNum !== targetPageIndex) {
+        pageFlip.turnToPage(targetPageIndex);
+      }
+    } catch (e) {
+      console.warn('Error in goToPage:', e);
+    }
+  }, [pages.length, getPageFlip]);
   
   // Keyboard navigation - uses the same functions as arrow buttons
   useKeyboardNavigation({
@@ -253,6 +271,7 @@ const BookContainer: React.FC<BookContainerProps> = ({
             key={bookmark.pageIndex}
             title={bookmark.title}
             isActive={currentPage === bookmark.pageIndex}
+            onClick={() => goToPage(bookmark.pageIndex)}
             pageNumber={bookmark.pageNumber}
             bookLeftPosition={bookLeftPosition}
             style={{
@@ -305,7 +324,7 @@ const BookContainer: React.FC<BookContainerProps> = ({
           swipeDistance={pageFlipConfig.swipeDistance}
           showPageCorners={pageFlipConfig.showPageCorners ?? false}
           onFlip={handleFlip}
-          className="flipbook-container"
+          className="flipbook-container z-20"
           style={{}}
         >
           {renderPages}
@@ -313,12 +332,12 @@ const BookContainer: React.FC<BookContainerProps> = ({
       </div>
 
       {/* Page indicator */}
-      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 font-garamond text-manuscript-ink opacity-60 text-sm z-10">
+      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 font-garamond text-manuscript-ink opacity-60 text-sm z-0">
         Page {currentPage + 1} of {pages.length}
       </div>
 
       {/* Instructions hint */}
-      <div className="absolute top-6 left-1/2 transform -translate-x-1/2 font-garamond text-manuscript-ink opacity-40 text-xs text-center z-10">
+      <div className="absolute top-6 left-1/2 transform -translate-x-1/2 font-garamond text-manuscript-ink opacity-40 text-xs text-center z-0">
         Click arrows or drag page corners to navigate
       </div>
     </div>

@@ -28,9 +28,10 @@ const Bookmark: React.FC<BookmarkProps> = ({
     fixed
     w-12
     cursor-pointer
+    hover:cursor-pointer
     transition-all
     duration-300
-    z-0
+    z-10
     ${bookLeftPosition > 0 ? 'opacity-100' : 'opacity-0'}
     ${activeStyles}
     ${className}
@@ -45,33 +46,27 @@ const Bookmark: React.FC<BookmarkProps> = ({
   };
   
   return (
-    <div
+    <button
       className={combinedClassName + " rotate-180 h-[62px]  rounded-sm shadow-2xl shadow-black border-none"}
       style={bookmarkStyle}
       onClick={onClick}
-      role="button"
       tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          onClick?.();
-        }
-      }}
       title={title}
       {...props}
     >
       {/* Vertical text on bookmark */}
       <div 
-        className="absolute z-50 overflow-visible inset-0 flex items-center justify-center"
+        className="absolute z-50 overflow-visible inset-0 flex items-center justify-center pointer-events-none"
         style={{
           writingMode: 'vertical-lr',
           textOrientation: 'mixed',
         }}
       >
-        <span className="text-manuscript-paper font-cormorant font-semibold text-xs tracking-wider py-2">
+        <span className="text-manuscript-paper font-cormorant font-semibold text-xs tracking-wider py-2 pointer-events-none">
           {title}
         </span>
       </div>
-    </div>
+    </button>
   );
 };
 

@@ -1,6 +1,6 @@
 import { HTMLAttributes, CSSProperties } from 'react';
 
-export interface BookmarkProps extends HTMLAttributes<HTMLDivElement> {
+export interface BookmarkProps extends HTMLAttributes<HTMLButtonElement> {
   title: string;
   isActive?: boolean;
   onClick?: () => void;
