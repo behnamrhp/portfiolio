@@ -9,7 +9,11 @@ import PageLayout from '../../organisms/PageLayout';
 import { dict } from '@/input';
 import { useArticles } from '@/viewmodels';
 
-const ArticlesPage: React.FC = () => {
+interface ArticlesPageProps {
+  shouldLoad?: boolean;
+}
+
+const ArticlesPage: React.FC<ArticlesPageProps> = ({ shouldLoad = true }) => {
   const {
     articles,
     loading,
@@ -18,7 +22,7 @@ const ArticlesPage: React.FC = () => {
     hasMore,
     goToPage,
     refresh,
-  } = useArticles();
+  } = useArticles({ enabled: shouldLoad });
   
   // Calculate total pages (approximate)
   const totalPages = hasMore ? currentPage + 1 : currentPage;
@@ -100,22 +104,6 @@ const ArticlesPage: React.FC = () => {
             </BodyText>
           </div>
         )}
-        
-        {/* Footer note */}
-        <div className="text-center pt-8 pb-4 border-t border-manuscript-ink">
-          <BodyText size="sm" className="opacity-60">
-            Articles are fetched from{' '}
-            <a
-              href="https://dev.to"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-manuscript-lapis hover:underline"
-            >
-              dev.to
-            </a>
-            {' '}in real-time
-          </BodyText>
-        </div>
       </div>
     </PageLayout>
   );

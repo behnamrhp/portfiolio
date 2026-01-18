@@ -6,7 +6,7 @@ import {
   SkillsLanguagesPage,
   SkillsStackPage,
   ProjectsPage,
-  ArticlesPage,
+  LazyArticlesPage,
 } from '@/views/pages';
 import { ROUTES } from '@/input/constants';
 import { isMobile } from '@/input/turnConfig';
@@ -133,7 +133,7 @@ export const sections: Section[] = [
       {
         id: 'articles',
         title: 'Articles',
-        content: <ArticlesPage />,
+        content: <LazyArticlesPage />,
       },
     ],
   },

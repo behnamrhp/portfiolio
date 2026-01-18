@@ -20,14 +20,21 @@ interface UseArticlesReturn extends UseArticlesState {
   refresh: () => void;
 }
 
+interface UseArticlesOptions {
+  enabled?: boolean; // Control whether to auto-fetch on mount
+}
+
 /**
  * Custom hook for managing articles from dev.to
  * Handles fetching, pagination, loading, and error states
+ * @param options.enabled - Whether to auto-fetch articles on mount (default: true)
  */
-export function useArticles(): UseArticlesReturn {
+export function useArticles(options: UseArticlesOptions = {}): UseArticlesReturn {
+  const { enabled = true } = options;
+  
   const [state, setState] = useState<UseArticlesState>({
     articles: [],
-    loading: true,
+    loading: enabled, // Only show loading if enabled
     error: null,
     currentPage: 1,
     hasMore: false,
@@ -62,8 +69,10 @@ export function useArticles(): UseArticlesReturn {
   }, []);
   
   useEffect(() => {
-    fetchArticlesData(1);
-  }, [fetchArticlesData]);
+    if (enabled) {
+      fetchArticlesData(1);
+    }
+  }, [fetchArticlesData, enabled]);
   
   const goToPage = useCallback(
     (page: number) => {

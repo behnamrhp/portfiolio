@@ -1,7 +1,5 @@
 import { Article } from '@/views/molecules/ArticleCard/ArticleCard.types';
 
-const DEV_TO_API_URL = 'https://dev.to/api';
-
 export interface FetchArticlesParams {
   username?: string;
   page?: number;
@@ -21,7 +19,7 @@ export interface FetchArticlesResponse {
 export async function fetchArticles(
   params: FetchArticlesParams = {}
 ): Promise<FetchArticlesResponse> {
-  const { username, page = 1, per_page = 8 } = params;
+  const { username, page = 1, per_page = 5 } = params;
   
   try {
     const searchParams = new URLSearchParams({
@@ -31,16 +29,7 @@ export async function fetchArticles(
     });
     
     const response = await fetch(
-      `${DEV_TO_API_URL}/articles?${searchParams.toString()}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          // API key is optional for public articles
-          ...(process.env.NEXT_PUBLIC_ARTICLE_API_KEY && {
-            'api-key': import.meta.env.VITE_ARTICLE_API_KEY,
-          }),
-        },
-      }
+      `${import.meta.env.VITE_ARTICLE_API}?${searchParams.toString()}`,
     );
     
     if (!response.ok) {
@@ -61,29 +50,3 @@ export async function fetchArticles(
     throw error;
   }
 }
-
-/**
- * Fetch a single article by ID
- * @param id - Article ID
- * @returns Promise with article data
- */
-export async function fetchArticleById(id: number): Promise<Article> {
-  try {
-    const response = await fetch(`${DEV_TO_API_URL}/articles/${id}`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Failed to fetch article: ${response.statusText}`);
-    }
-    
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching article:', error);
-    throw error;
-  }
-}
-
-

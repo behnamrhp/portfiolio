@@ -6,7 +6,7 @@ export const ARTICLE_API_KEY = import.meta.env.VITE_ARTICLE_API_KEY || "";
 
 export const DEV_TO_USERNAME = "behnamrhp"; // Update with actual dev.to username
 
-export const ARTICLES_PER_PAGE = 8;
+export const ARTICLES_PER_PAGE = 4;
 
 // Page routes
 export const ROUTES = {
