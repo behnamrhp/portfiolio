@@ -64,6 +64,12 @@ html {
   }
 }
 
+@media screen and (max-width: 728px) {
+  html {
+    font-size: 11px;
+  }
+}
+
 /* Global scrollbar styles for all browsers */
 * {
   /* Firefox scrollbar */

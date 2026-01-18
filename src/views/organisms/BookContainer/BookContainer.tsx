@@ -240,7 +240,7 @@ const BookContainer: React.FC<BookContainerProps> = ({
               </div>
             )}
             
-            <div className="font-garamond h-full overflow-auto p-6 relative z-10">
+            <div className="font-garamond h-full overflow-scroll p-1 md:p-6 relative z-10">
               {children || page.content}
             </div>
           </div>
@@ -256,6 +256,7 @@ const BookContainer: React.FC<BookContainerProps> = ({
         currentPage={currentPage}
         onBookmarkClick={goToPage}
         bookContainerRef={bookContainerRef}
+        pages={pages}
       />
 
       {/* Book Container with react-pageflip */}
