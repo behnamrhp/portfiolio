@@ -61,21 +61,33 @@ const BookBookmarks: React.FC<BookBookmarksProps> = ({
 
   return (
     <>
-      {bookmarks.map((bookmark) => (
-        <Bookmark
-          key={bookmark.pageIndex}
-          title={bookmark.title}
-          isActive={currentPage === bookmark.pageIndex}
-          onClick={() => onBookmarkClick(bookmark.pageIndex)}
-          pageNumber={bookmark.pageNumber}
-          bookLeftPosition={bookLeftPosition}
-          style={{
-            position: 'fixed',
-            top: bookTopPosition > 0 && bookLeftPosition > 0 ? `${bookTopPosition}px` : '50vh',
-          }}
-          className={className}
-        />
-      ))}
+      {bookmarks.map((bookmark) => {
+        // Determine if bookmark should be active
+        // Desktop: Check if current page OR next page (right side) matches bookmark
+        // Mobile: Check if current page matches bookmark
+        let isActive = currentPage === bookmark.pageIndex;
+        
+        if (!isMobileScreen && currentPage % 2 === 0) {
+          // On desktop, if on even page (left side), also check the right page
+          isActive = isActive || (currentPage + 1 === bookmark.pageIndex);
+        }
+        
+        return (
+          <Bookmark
+            key={bookmark.pageIndex}
+            title={bookmark.title}
+            isActive={isActive}
+            onClick={() => onBookmarkClick(bookmark.pageIndex)}
+            pageNumber={bookmark.pageNumber}
+            bookLeftPosition={bookLeftPosition}
+            style={{
+              position: 'fixed',
+              top: bookTopPosition > 0 && bookLeftPosition > 0 ? `${bookTopPosition}px` : '50vh',
+            }}
+            className={className}
+          />
+        );
+      })}
     </>
   );
 };

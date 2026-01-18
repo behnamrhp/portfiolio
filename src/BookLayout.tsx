@@ -6,6 +6,7 @@ import {
   getSectionByPageIndex, 
   getFirstPageIndexByPath 
 } from './sections';
+import { isMobile } from '@/input';
 
 /**
  * BookLayout - Main book component with section-based URL routing
@@ -38,22 +39,40 @@ export function BookLayout() {
   const handlePageChange = useCallback((newPageIndex: number) => {
     if (newPageIndex < 0 || newPageIndex >= flatPages.length) return;
     
-    const currentSection = getSectionByPageIndex(flatPages, currentPage);
-    const newSection = getSectionByPageIndex(flatPages, newPageIndex);
+    const isMobileScreen = isMobile();
     
     // Update page state
     setCurrentPage(newPageIndex);
     
-    // Update URL only if section changed
-    if (currentSection?.id !== newSection?.id && newSection) {
-      
+    // Determine which page's section to show in URL
+    // Desktop: In two-page mode, show the section of the RIGHT page (odd index)
+    // Mobile: Show the section of the current page
+    let pageToShowInUrl = newPageIndex;
+    
+    if (!isMobileScreen && newPageIndex % 2 === 0 && newPageIndex > 0) {
+      // If on an even page (left side) in desktop mode, check if next page exists
+      // and show that section in the URL (right page)
+      if (newPageIndex + 1 < flatPages.length) {
+        const rightPage = flatPages[newPageIndex + 1];
+        const leftPage = flatPages[newPageIndex];
+        
+        // If the right page is a different section, show it in URL
+        if (rightPage.sectionId !== leftPage.sectionId) {
+          pageToShowInUrl = newPageIndex + 1;
+        }
+      }
+    }
+    
+    const sectionToShow = getSectionByPageIndex(flatPages, pageToShowInUrl);
+    
+    if (sectionToShow && window.location.pathname !== sectionToShow.path) {
       window.history.pushState(
-        { page: newPageIndex, section: newSection.id },
-        newSection.title,
-        newSection.path
+        { page: pageToShowInUrl, section: sectionToShow.id },
+        sectionToShow.title,
+        sectionToShow.path
       );
     }
-  }, [currentPage, flatPages]);
+  }, [flatPages]);
   
   // Handle browser back/forward
   useEffect(() => {
