@@ -112,17 +112,12 @@ const BookContainer: React.FC<BookContainerProps> = ({
     try {
       const currentPageNum = pageFlip.getCurrentPageIndex();
       if (currentPageNum < pages.length - 1) {
-        // On mobile (portrait mode), use turnToPage instead of flipNext
-        if (isMobileScreen) {
-          pageFlip.turnToPage(currentPageNum + 1);
-        } else {
-          pageFlip.flipNext('top');
-        }
+        pageFlip.flipNext('top');
       }
     } catch (e) {
       console.warn('Error in nextPage:', e);
     }
-  }, [pages.length, getPageFlip, isMobileScreen]);
+  }, [pages.length, getPageFlip]);
 
   const previousPage = useCallback(() => {
     const pageFlip = getPageFlip();
