@@ -159,7 +159,7 @@ personal portfolio website for a persian software engineer to show my abilities,
       - UML Diagrams  
       - Agile Methodologies  
       - TDD/BDD  
-      - Unit-testing, Integration test and e2e test.
+      - Unit-testing, Integration test and e2e test.  
   - **Page 2 - Languages + Automation & Infrastructure:**
     - **Languages section (first half of page):**
       - Golang  
@@ -177,7 +177,7 @@ personal portfolio website for a persian software engineer to show my abilities,
       - Ansible  
       - Fluxcd  
       - Jenkins  
-      - Github Actions
+      - Github Actions  
   - **Page 3 - Backend + Frontend:**
     - **Backend section (first half of page):**  
       - [Nest.js](http://Nest.js)  
@@ -195,7 +195,7 @@ personal portfolio website for a persian software engineer to show my abilities,
       - Grafana  
       - Promtail, Loki  
       - GraphQL  
-      - Websocket
+      - Websocket  
     - **Frontend section (second half of page):**  
       - React  
       - Next.js  
@@ -220,7 +220,7 @@ personal portfolio website for a persian software engineer to show my abilities,
     - On click each title should lead to document of technology.  
     - Each logo should be square with a small border radius like other borders with same variable.  
     - List of technologies should be an object in input folder as skills.ts and should be object with key value and separated by categories so in future I can easily update the list.  
-    - Each skill object in side of category object should have, title, image and document link.
+    - Each skill object in side of category object should have, title, image and document link.  
 - **Projects section** (Path: `/projects`) - 2 pages  
   - In this page each row should define one project and each project should have title, description, optional screenshot image and list of links which each item should be title of link and url of link.  
   - This object should be in input folder as project.ts so I can update it later whenever I want.  
@@ -257,7 +257,7 @@ personal portfolio website for a persian software engineer to show my abilities,
       - Link:  
         - Title: Nelify  
         - URL: [https://teaching-whiteboard.netlify.app/](https://teaching-whiteboard.netlify.app/)  
-      - Description: One of his projects which he made after two years of development which he made for teachers to let them have an online board with all drawing tools, adding any pdf or image and highlight on them and also record themselves.
+      - Description: One of his projects which he made after two years of development which he made for teachers to let them have an online board with all drawing tools, adding any pdf or image and highlight on them and also record themselves.  
   - **Page 1:** Display projects 1-2
   - **Page 2:** Display projects 3-4 (or 3-5 if we have 5 projects)
   - URL remains `/projects` for both pages

@@ -1,5 +1,6 @@
 import {
   CoverPage,
+  BackCoverPage,
   AboutWhoPage,
   AboutHelpPage,
   SkillsPracticesPage,
@@ -134,6 +135,20 @@ export const sections: Section[] = [
         id: 'articles',
         title: 'Articles',
         content: <LazyArticlesPage />,
+      },
+    ],
+  },
+  
+  // Back cover - final page
+  {
+    id: 'back-cover',
+    title: 'Back Cover',
+    path: '/',
+    pages: [
+      {
+        id: 'back-cover',
+        title: 'Back Cover',
+        content: <BackCoverPage />,
       },
     ],
   },

@@ -6,6 +6,7 @@ export interface Article {
   description?: string;
   cover_image?: string;
   url: string;
+  page_views_count: number;
   public_reactions_count: number;
   published_at: string;
 }

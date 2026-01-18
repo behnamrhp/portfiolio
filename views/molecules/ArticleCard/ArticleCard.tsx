@@ -39,6 +39,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
     ${className}
   `.trim();
   
+  console.log(article);
   return (
     <div
       className={combinedClassName}
@@ -61,22 +62,22 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
         </div>
       )}
       
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 cursor-pointer">
         <Heading
           level="h4"
-          className="mb-2 group-hover:text-manuscript-lapis transition-colors line-clamp-2"
+          className="mb-2 group-hover:text-manuscript-lapis transition-colors line-clamp-2 cursor-pointer"
         >
           {article.title}
         </Heading>
         
         {article.description && (
-          <BodyText size="sm" className="mb-2 line-clamp-2 opacity-80">
+          <BodyText size="sm" className="mb-2 line-clamp-2 opacity-80 cursor-pointer">
             {article.description}
           </BodyText>
         )}
         
-        <div className="flex items-center gap-4 text-sm text-manuscript-ink opacity-60">
-          <span>❤️ {article.public_reactions_count} reactions</span>
+        <div className="flex items-center gap-4 text-sm text-manuscript-ink opacity-60 cursor-pointer">
+          <span>❤️ {String(article.page_views_count || 0)} views</span>
           <span>
             {new Date(article.published_at).toLocaleDateString('en-US', {
               year: 'numeric',

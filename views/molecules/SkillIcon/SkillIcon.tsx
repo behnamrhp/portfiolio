@@ -35,26 +35,26 @@ const SkillIcon: React.FC<SkillIconProps> = ({
   `.trim();
 
   return (
-    <div
+    <button
       className={combinedClassName}
       onClick={handleClick}
       {...props}
     >
-      <div className="w-18 h-16 p-1 overflow-visible flex items-center justify-center">
+      <div className="w-18 h-16 p-1 overflow-visible flex items-center justify-center cursor-pointer">
         <img
           src={skill.image}
           alt={skill.title}
-          className='w-32 mt-3 mb-3 object-cover'
+          className='w-32 mt-3 mb-3 object-cover cursor-pointer'
         />
       </div>
       <LinkText
         href={skill.documentLink}
         external
-        className="text-xs text-center pointer-events-none"
+        className="text-xs text-center pointer-events-none cursor-pointer"
       >
         {skill.title}
       </LinkText>
-    </div>
+    </button>
   );
 };
 

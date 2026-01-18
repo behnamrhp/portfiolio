@@ -103,7 +103,20 @@ const BookContainer: React.FC<BookContainerProps> = ({
       if (bookContainerRef.current) {
         const rect = bookContainerRef.current.getBoundingClientRect();
         setBookTopPosition(rect.top - 62);
-        setBookLeftPosition(rect.left + (rect.width / 2) - 30);
+        
+        // Adjust left position based on current page and device
+        // Desktop: If on second projects page (8) or articles (9), move to left side (right page top)
+        // Desktop structure: bg=0, cover=1, about=2-3, skills=4-6, projects=7-8, articles=9, empty=10
+        let leftPosition;
+        if (!isMobileScreen && currentPage >= 8) {
+          // Position at the left side (start of right page in two-page view)
+          leftPosition = rect.left - 30;
+        } else {
+          // Normal center position
+          leftPosition = rect.left + rect.width  - 300;
+        }
+        
+        setBookLeftPosition(leftPosition);
       }
     };
 
@@ -111,7 +124,7 @@ const BookContainer: React.FC<BookContainerProps> = ({
       updateBookPosition();
     }, 500);
 
-  }, []);
+  }, [currentPage, isMobileScreen]);
 
   // Handle controlled page changes from parent (keyboard, URL, etc.)
   // This is where we use React PageFlip's turnToPage method
@@ -241,6 +254,7 @@ const BookContainer: React.FC<BookContainerProps> = ({
           className={pageClasses}
         >
           <div className='page-content'>
+            {/* Front cover background */}
             {((index === 1 && !isMobileScreen) || (index === 0 && isMobileScreen)) && (
               <div style={{
                 height: bookSize.height,
@@ -253,6 +267,21 @@ const BookContainer: React.FC<BookContainerProps> = ({
 
               </div>
             )}
+            
+            {/* Back cover background - same CSS as front cover but with back-cover.png */}
+            {isLastPage && (
+              <div style={{
+                height: bookSize.height,
+                width: bookSize.width,
+                backgroundImage: `url("/assets/images/back-cover.png")`,
+                backgroundSize: '100% 100%',
+                backgroundPosition: '0 0',
+                backgroundRepeat: 'no-repeat',
+              }} className='fixed top-0 left-0 z-0' >
+
+              </div>
+            )}
+            
             <div className="font-garamond h-full overflow-auto p-6 md:p-8 lg:p-12 relative z-10">
               {children || page.content}
             </div>
