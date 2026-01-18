@@ -26,20 +26,40 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
-      - name: Build with Next.js
-        run: npm run build
+      - name: Build with Vite
+        run: pnpm build
         env:
-          NEXT_PUBLIC_ARTICLE_API_KEY: ${{ secrets.ARTICLE_API_KEY }}
+          VITE_ARTICLE_API: ${{ secrets.VITE_ARTICLE_API }}
+          VITE_CV_URL: ${{ secrets.VITE_CV_URL }}
+          GITHUB_PAGES: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: ./out
+          path: ./dist
 
   deploy:
     environment:

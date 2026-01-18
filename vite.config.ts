@@ -11,10 +11,13 @@ export default defineConfig({
     },
   },
   server: {
-    host: true, // or '0.0.0.0'
-    port: 5173 // Optional: specify a port
+    host: true,
+    port: 5173,
   },
-  base: '/',
+  // For GitHub Pages deployment
+  // If deploying to https://<USERNAME>.github.io/<REPO>/, set base to '/<REPO>/'
+  // If deploying to custom domain or https://<USERNAME>.github.io/, set base to '/'
+  base: process.env.GITHUB_PAGES ? '/portfiolio/' : '/',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
