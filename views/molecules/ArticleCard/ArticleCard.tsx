@@ -26,7 +26,8 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   
   const combinedClassName = `
     flex
-    gap-4
+    flex-col
+    gap-3
     p-4
     border
     border-manuscript-ink
@@ -49,43 +50,46 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
       tabIndex={0}
       {...props}
     >
-      {article.cover_image && (
-        <div className="flex-shrink-0 w-24 h-24">
-          <ImageWrapper
-            src={article.cover_image}
-            alt={article.title}
-            width={96}
-            height={96}
-            bordered
-            rounded
-          />
-        </div>
-      )}
-      
-      <div className="flex-1 min-w-0 cursor-pointer">
+      {/* Row 1: Image and Title */}
+      <div className="flex gap-4 items-start">
+        {article.cover_image && (
+          <div className="flex-shrink-0 w-20 h-20">
+            <ImageWrapper
+              src={article.cover_image}
+              alt={article.title}
+              width={80}
+              height={80}
+              bordered
+              rounded
+            />
+          </div>
+        )}
+        
         <Heading
           level="h4"
-          className="mb-2 group-hover:text-manuscript-lapis transition-colors line-clamp-2 cursor-pointer"
+          className="flex-1 group-hover:text-manuscript-lapis transition-colors line-clamp-2 cursor-pointer"
         >
           {article.title}
         </Heading>
-        
-        {article.description && (
-          <BodyText size="sm" className="mb-2 line-clamp-2 opacity-80 cursor-pointer">
-            {article.description}
-          </BodyText>
-        )}
-        
-        <div className="flex items-center gap-4 text-sm text-manuscript-ink opacity-60 cursor-pointer">
-          <span>❤️ {String(article.page_views_count || 0)} views</span>
-          <span>
-            {new Date(article.published_at).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'short',
-              day: 'numeric',
-            })}
-          </span>
-        </div>
+      </div>
+      
+      {/* Row 2: Description */}
+      {article.description && (
+        <BodyText size="sm" className="line-clamp-2 opacity-80 cursor-pointer w-full">
+          {article.description}
+        </BodyText>
+      )}
+      
+      {/* Row 3: Reactions and Date */}
+      <div className="flex items-center gap-4 text-sm text-manuscript-ink opacity-60 cursor-pointer">
+        <span>❤️ {String(article.page_views_count || 0)} views</span>
+        <span>
+          {new Date(article.published_at).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          })}
+        </span>
       </div>
     </div>
   );
