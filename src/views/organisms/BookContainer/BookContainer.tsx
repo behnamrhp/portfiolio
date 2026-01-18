@@ -126,12 +126,17 @@ const BookContainer: React.FC<BookContainerProps> = ({
     try {
       const currentPageNum = pageFlip.getCurrentPageIndex();
       if (currentPageNum > 0) {
-        pageFlip.flipPrev('top');
+        // On mobile (portrait mode), use turnToPage instead of flipPrev
+        if (isMobileScreen) {
+          pageFlip.turnToPage(currentPageNum - 1);
+        } else {
+          pageFlip.flipPrev('top');
+        }
       }
     } catch (e) {
       console.warn('Error in previousPage:', e);
     }
-  }, [getPageFlip]);
+  }, [getPageFlip, isMobileScreen]);
 
   // Navigate to a specific page (used by bookmarks)
   const goToPage = useCallback((targetPageIndex: number) => {
@@ -181,7 +186,7 @@ const BookContainer: React.FC<BookContainerProps> = ({
     if (index === 0 && !isMobileScreen) {
       return (
         <Page key="cover0"
-        pageNumber={0} className="page bg-[url('/assets/images/bg.webp')] bg-contain page-cover page-cover-top hard font-garamond">
+        pageNumber={0} className="page bg-[url('/assets/images/bg.webp')] bg-cover page-cover page-cover-top hard font-garamond">
           <div className="page-content" />
         </Page>
       )
@@ -235,7 +240,7 @@ const BookContainer: React.FC<BookContainerProps> = ({
               </div>
             )}
             
-            <div className="font-garamond h-full overflow-auto p-6 md:p-8 lg:p-12 relative z-10">
+            <div className="font-garamond h-full overflow-scroll p-1 md:p-6 relative z-10">
               {children || page.content}
             </div>
           </div>
@@ -251,6 +256,7 @@ const BookContainer: React.FC<BookContainerProps> = ({
         currentPage={currentPage}
         onBookmarkClick={goToPage}
         bookContainerRef={bookContainerRef}
+        pages={pages}
       />
 
       {/* Book Container with react-pageflip */}

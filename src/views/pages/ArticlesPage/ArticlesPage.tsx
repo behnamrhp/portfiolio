@@ -6,7 +6,7 @@ import Skeleton from '../../atoms/Skeleton';
 import ArticleCard from '../../molecules/ArticleCard';
 import Pagination from '../../molecules/Pagination';
 import PageLayout from '../../organisms/PageLayout';
-import { dict } from '@/input';
+import { dict, isMobile } from '@/input';
 import { useArticles } from '@/viewmodels';
 
 interface ArticlesPageProps {
@@ -37,7 +37,7 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ shouldLoad = true }) => {
         {/* Loading State */}
         {loading && (
           <div className="space-y-4">
-            {Array.from({ length: 4 }).map((_, index) => (
+            {Array.from({ length: isMobile() ? 2 : 4 }).map((_, index) => (
               <div
                 key={index}
                 className="border border-manuscript-ink rounded-sm p-4 space-y-3"
@@ -73,7 +73,7 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ shouldLoad = true }) => {
         {/* Articles List */}
         {!loading && !error && articles.length > 0 && (
           <>
-            <div className="space-y-4">
+            <div className="space-y-3">
               {articles.map((article) => (
                 <ArticleCard key={article.id} article={article} />
               ))}
@@ -81,7 +81,7 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ shouldLoad = true }) => {
             
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex justify-center pt-6">
+              <div className="flex justify-center ">
                 <Pagination
                   currentPage={currentPage}
                   totalPages={totalPages}

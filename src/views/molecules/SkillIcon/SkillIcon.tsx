@@ -40,7 +40,7 @@ const SkillIcon: React.FC<SkillIconProps> = ({
       onClick={handleClick}
       {...props}
     >
-      <div className="w-18 h-16 p-1 overflow-visible flex items-center justify-center cursor-pointer">
+      <div className="lg:w-18 lg:h-16 p-1 overflow-visible flex items-center justify-center cursor-pointer">
         <img
           src={skill.image}
           alt={skill.title}

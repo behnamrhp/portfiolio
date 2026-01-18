@@ -1,6 +1,6 @@
 // Breakpoints and size configurations
 export const BREAKPOINTS = {
-  MOBILE: 1024,
+  MOBILE: 1025,
 } as const;
 
 export const SIZE_CONFIG = {
@@ -29,14 +29,17 @@ export const getBookSizes = (): { width: number, height: number } => {
   }
   const ratio = SIZE_CONFIG.BOOK_HEIGHT / SIZE_CONFIG.BOOK_WIDTH;
   if (isMobile()) {
-    const width = Math.min(window.innerWidth * SIZE_CONFIG.MOBILE_WIDTH_MULTIPLIER, window.innerWidth * 0.9);
+  let width = Math.min(window.innerWidth * SIZE_CONFIG.DESKTOP_WIDTH_MULTIPLIER, 650);
+  width = Math.min(width, window.innerWidth * 0.8);
     return { 
       width,
-      height: Math.min(width * ratio, window.innerHeight * 0.85)
+      height: Math.min(width * ratio, window.innerHeight * 0.8)
     };
   }
 
-  const width = Math.min(window.innerWidth * SIZE_CONFIG.DESKTOP_WIDTH_MULTIPLIER, window.innerWidth * 0.4);
+  let width = Math.min(window.innerWidth * SIZE_CONFIG.DESKTOP_WIDTH_MULTIPLIER, 700);
+  width = Math.min(width, window.innerWidth * 0.4);
+
   return { 
     width,
     height: Math.min(width * ratio, window.innerHeight * 0.85)
@@ -89,12 +92,15 @@ export const getResponsivePageFlipConfig = (): PageFlipConfig => {
     return {
       ...PageFlipConfigs,
       size: 'stretch',
+      useMouseEvents: false, // Disable mouse events on mobile, use touch only
+      mobileScrollSupport: true,
     };
   }
 
   return {
     ...PageFlipConfigs,
     size: 'stretch',
+    useMouseEvents: true, // Enable mouse events on desktop
   };
 };
 

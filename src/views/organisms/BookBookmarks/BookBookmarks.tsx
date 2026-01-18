@@ -2,10 +2,20 @@ import React, { useEffect, useState } from 'react';
 import Bookmark from '../../molecules/Bookmark';
 import { isMobile } from '@/input';
 
+interface BookPage {
+  id: string;
+  title: string;
+  path: string;
+  content?: React.ReactNode;
+  sectionTitle?: string;
+  isFirstPageOfSection?: boolean;
+}
+
 interface BookBookmarksProps {
   currentPage: number;
   onBookmarkClick: (pageIndex: number) => void;
   bookContainerRef: React.RefObject<HTMLDivElement>;
+  pages: BookPage[];
   className?: string;
 }
 
@@ -16,6 +26,7 @@ const BookBookmarks: React.FC<BookBookmarksProps> = ({
   currentPage,
   onBookmarkClick,
   bookContainerRef,
+  pages,
   className = '',
 }) => {
   const [bookTopPosition, setBookTopPosition] = useState<number>(0);
@@ -24,10 +35,10 @@ const BookBookmarks: React.FC<BookBookmarksProps> = ({
 
   // Define bookmarks for main section pages
   const bookmarks = [
-    { pageIndex: isMobileScreen ? 1 : 2, title: 'About', pageNumber: 1 },
-    { pageIndex: isMobileScreen ? 3 : 4, title: 'Skills', pageNumber: 2 },
-    { pageIndex: isMobileScreen ? 6 : 7, title: 'Projects', pageNumber: 3 },
-    { pageIndex: isMobileScreen ? 8 : 9, title: 'Articles', pageNumber: 4 },
+    { pageIndex: isMobileScreen ? 1 : 2, title: 'About', sectionTitle: 'About', pageNumber: 1 },
+    { pageIndex: isMobileScreen ? 3 : 4, title: 'Skills', sectionTitle: 'Skills', pageNumber: 2 },
+    { pageIndex: isMobileScreen ? 6 : 7, title: 'Projects', sectionTitle: 'Projects', pageNumber: 3 },
+    { pageIndex: isMobileScreen ? 8 : 9, title: 'Articles', sectionTitle: 'Articles', pageNumber: 4 },
   ];
 
   // Calculate book's top and left position for bookmark placement
@@ -63,13 +74,20 @@ const BookBookmarks: React.FC<BookBookmarksProps> = ({
     <>
       {bookmarks.map((bookmark) => {
         // Determine if bookmark should be active
-        // Desktop: Check if current page OR next page (right side) matches bookmark
-        // Mobile: Check if current page matches bookmark
-        let isActive = currentPage === bookmark.pageIndex;
+        let isActive = false;
         
-        if (!isMobileScreen && currentPage % 2 === 0) {
-          // On desktop, if on even page (left side), also check the right page
-          isActive = isActive || (currentPage + 1 === bookmark.pageIndex);
+        if (isMobileScreen) {
+          // Mobile: Check if current page belongs to the bookmark's section
+          const currentPageData = pages[currentPage];
+          isActive = currentPageData?.sectionTitle === bookmark.sectionTitle;
+        } else {
+          // Desktop: Check if current page OR next page (right side) matches bookmark
+          isActive = currentPage === bookmark.pageIndex;
+          
+          if (currentPage % 2 === 0) {
+            // On desktop, if on even page (left side), also check the right page
+            isActive = isActive || (currentPage + 1 === bookmark.pageIndex);
+          }
         }
         
         return (

@@ -10,7 +10,14 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  base: '/',
+  server: {
+    host: true,
+    port: 5173,
+  },
+  // For GitHub Pages deployment
+  // If deploying to https://<USERNAME>.github.io/<REPO>/, set base to '/<REPO>/'
+  // If deploying to custom domain or https://<USERNAME>.github.io/, set base to '/'
+  base: process.env.GITHUB_PAGES ? '/portfiolio/' : '/',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',

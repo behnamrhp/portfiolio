@@ -65,7 +65,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
         )}
         
         <Heading
-          level="h4"
+          level="h6"
           className="flex-1 group-hover:text-manuscript-lapis transition-colors line-clamp-2 cursor-pointer"
         >
           {article.title}
