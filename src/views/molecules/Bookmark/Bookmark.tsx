@@ -62,7 +62,7 @@ const Bookmark: React.FC<BookmarkProps> = ({
           textOrientation: 'mixed',
         }}
       >
-        <span className="text-manuscript-paper font-cormorant font-semibold text-xs tracking-wider py-2 pointer-events-none">
+        <span className="text-manuscript-paper font-cormorant font-bold text-sm tracking-wider py-2 pointer-events-none ">
           {title}
         </span>
       </div>

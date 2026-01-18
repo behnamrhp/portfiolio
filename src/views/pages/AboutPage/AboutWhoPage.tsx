@@ -48,13 +48,13 @@ His main philosophy about success in software teams is having <strong className=
             Connect with him
           </Heading>
           
-          <div className="flex justify-center gap-6">
+          <div className="flex justify-center gap-3 md:gap-6">
             {/* LinkedIn */}
             <a
               href="https://www.linkedin.com/in/behnam-rahimpour-18b13a210"
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex flex-col items-center gap-2 p-4 rounded-sm border border-manuscript-ink border-opacity-20 hover:border-manuscript-lapis hover:bg-manuscript-lapis hover:bg-opacity-10 transition-all"
+              className="group flex flex-col items-center gap-2 p-2 md:p-4 rounded-sm border border-manuscript-ink border-opacity-20 hover:border-manuscript-lapis hover:bg-manuscript-lapis hover:bg-opacity-10 transition-all"
               title="Connect on LinkedIn"
             >
               <img 
@@ -72,7 +72,7 @@ His main philosophy about success in software teams is having <strong className=
               href="https://github.com/behnamrhp"
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex flex-col items-center gap-2 p-4 rounded-sm border border-manuscript-ink border-opacity-20 hover:border-manuscript-lapis hover:bg-manuscript-lapis hover:bg-opacity-10 transition-all"
+              className="group flex flex-col items-center gap-2 p-2 md:p-4 rounded-sm border border-manuscript-ink border-opacity-20 hover:border-manuscript-lapis hover:bg-manuscript-lapis hover:bg-opacity-10 transition-all"
               title="View GitHub Profile"
             >
               <img 
@@ -88,7 +88,7 @@ His main philosophy about success in software teams is having <strong className=
             {/* Email */}
             <a
               href="mailto:behnamrahimpour74@gmail.com"
-              className="group flex flex-col items-center gap-2 p-4 rounded-sm border border-manuscript-ink border-opacity-20 hover:border-manuscript-lapis hover:bg-manuscript-lapis hover:bg-opacity-10 transition-all"
+              className="group flex flex-col items-center gap-2 p-2 md:p-4 rounded-sm border border-manuscript-ink border-opacity-20 hover:border-manuscript-lapis hover:bg-manuscript-lapis hover:bg-opacity-10 transition-all"
               title="Send Email"
             >
               <img 
@@ -106,7 +106,7 @@ His main philosophy about success in software teams is having <strong className=
               href="https://t.me/BRHP74"
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex flex-col items-center gap-2 p-4 rounded-sm border border-manuscript-ink border-opacity-20 hover:border-manuscript-lapis hover:bg-manuscript-lapis hover:bg-opacity-10 transition-all"
+              className="group flex flex-col items-center gap-2 p-2 md:p-4 rounded-sm border border-manuscript-ink border-opacity-20 hover:border-manuscript-lapis hover:bg-manuscript-lapis hover:bg-opacity-10 transition-all"
               title="Message on Telegram"
             >
               <img 
