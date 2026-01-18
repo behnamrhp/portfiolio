@@ -101,8 +101,15 @@ This document breaks down the Persian Ancient Book-themed portfolio website into
 
 ---
 
-## Phase 3: Book Infrastructure & Navigation ✅ COMPLETE
-**Goal**: Implement the core book functionality with page turning, routing, and bookmarks.
+## Phase 3: Book Infrastructure & Navigation ⚠️ NEEDS MAJOR UPDATE
+**Goal**: Implement the core book functionality with page turning, section-based routing, content pagination, and bookmarks.
+
+### Critical Architecture Change:
+**Section-Based Routing vs Physical Page Routing**
+- Each URL path represents a **section** (not a physical page)
+- A section can span multiple physical pages if content overflows
+- URL updates only when navigating between sections
+- Physical page navigation within a section does NOT change URL
 
 ### Tasks:
 - [x] **3.1 Custom Page-Turn Animation System** ✅
@@ -110,35 +117,173 @@ This document breaks down the Persian Ancient Book-themed portfolio website into
   - Implemented CSS 3D animations
   - Added direction tracking and animation states
 
-- [x] **3.2 Implement Page Routing with window.history API** ✅
-  - Implemented URL management using window.history.pushState()
-  - Created routing system where each page = URL path
-  - Implemented path changes without page refresh (no React Router re-renders)
-  - Set up proper page-to-route mapping
-  - Configured browser history for back/forward navigation via popstate events
+- [ ] **3.2 Implement Section-Based Routing** ⚠️ NEEDS MAJOR REFACTOR
+  - **Current**: Each physical page has its own URL path
+  - **Required**: Each section has one URL path, spanning multiple physical pages
+  - Implement URL management using window.history.pushState()
+  - URL represents section (e.g., `/about`), not individual page
+  - Physical page navigation within section should NOT update URL
+  - URL changes only when entering/exiting a section
+  - Track: currentSection, currentPhysicalPage, totalPagesInSection
+  - Browser history should work with section context
 
-- [x] **3.3 Page Turn Interactions** ✅
-  - Implemented scroll-based page turning
+- [ ] **3.3 Content Pagination System** ⚠️ NEW REQUIREMENT
+  - Measure section content height
+  - Calculate how many physical pages needed per section
+  - Split content across multiple pages when it overflows page height
+  - Each physical page is scrollable up to book height
+  - Overflow content automatically continues on next physical page
+  - Maintain section context across pages
+  - Example: "About" section content = 2500px height
+    - Book page height = 800px
+    - Result: About section spans 4 physical pages
+    - All 4 pages have URL = `/about`
+
+- [x] **3.4 Page Turn Interactions** ✅
+  - Implemented scroll-based page turning (may need adjustment for sections)
   - Added throttle for scroll events (600ms)
   - Implemented keyboard navigation (left/right arrows)
   - Navigation arrow buttons integrated
+  - **Note**: May need to distinguish between:
+    - Page turn within same section (no URL change)
+    - Page turn to new section (URL changes)
 
-- [x] **3.4 Bookmark System** ✅
-  - Bookmark component integrated
+- [ ] **3.5 Bookmark System** ⚠️ NEEDS UPDATE
+  - **Current**: One bookmark per physical page
+  - **Required**: One bookmark per section
+  - Bookmark component for each section (not each page)
+  - Clicking bookmark navigates to first page of that section
+  - Bookmark remains active for all pages within section
   - Implemented bookmark overflow behavior
   - Made bookmarks clickable for navigation
   - Handle bookmark positioning and stacking
   - Bookmarks stay within book width
 
-- [x] **3.5 Viewport Management** ✅
+- [x] **3.6 Viewport Management** ✅
   - Locked screen height/width (no scrolling)
   - Enabled scrolling inside book content only
   - Handled overflow with custom scrollbar
 
 ---
 
-## Phase 4: Page Implementation - Cover & About ✅ COMPLETE
-**Goal**: Implement the book cover and "Who is he?" page with all content and styling.
+## Phase 3.5: Content Pagination & Section Management ⚠️ NEW PHASE
+**Goal**: Implement the content pagination system where sections automatically span multiple physical pages based on content height.
+
+### Architecture Overview:
+```
+Section (URL: /about)
+├── Physical Page 1 (scrollable, max height: 800px)
+├── Physical Page 2 (overflow content from page 1)
+├── Physical Page 3 (overflow content from page 2)
+└── Physical Page 4 (remaining content)
+
+All pages show URL: /about
+```
+
+### Tasks:
+- [ ] **3.5.1 Section Model & Data Structure** ⚠️ REQUIRED
+  - Define Section interface:
+    ```typescript
+    interface Section {
+      id: string;           // 'about', 'skills', etc.
+      title: string;        // 'About', 'Skills', etc.
+      path: string;         // '/about', '/skills', etc.
+      component: ReactNode; // Content component
+      // Content pagination will be calculated dynamically
+    }
+    ```
+  - Update pages array to be sections array
+  - Each section renders its full content
+  - Physical pages are calculated from rendered height
+
+- [ ] **3.5.2 Content Height Measurement** ⚠️ REQUIRED
+  - Create utility to measure rendered content height
+  - Use ResizeObserver or useLayoutEffect
+  - Measure section content in hidden/offscreen container
+  - Get accurate height before pagination
+
+- [ ] **3.5.3 Page Calculation Algorithm** ⚠️ REQUIRED
+  - Calculate physical pages needed per section:
+    ```typescript
+    const pageHeight = bookHeight - padding;
+    const totalPages = Math.ceil(contentHeight / pageHeight);
+    ```
+  - Track page ranges for content slicing
+  - Handle edge cases (empty sections, very short content)
+
+- [ ] **3.5.4 Content Slicing & Rendering** ⚠️ REQUIRED
+  - Render full content offscreen to measure
+  - Slice content into page-sized chunks
+  - Handle different content types:
+    - Text paragraphs (split at natural breaks)
+    - Lists (keep items together when possible)
+    - Images (avoid splitting)
+    - Cards/components (keep atomic)
+  - Consider using CSS column layout or manual slicing
+
+- [ ] **3.5.5 Section Context Management** ⚠️ REQUIRED
+  - Create useSectionContext hook
+  - Track:
+    - currentSection: Section object
+    - currentPhysicalPage: number (within section)
+    - totalPagesInSection: number
+    - isFirstPageOfSection: boolean
+    - isLastPageOfSection: boolean
+  - Update context on page turn
+  - Determine if page turn enters new section
+
+- [ ] **3.5.6 URL Update Logic** ⚠️ REQUIRED
+  - Update URL only on section change:
+    ```typescript
+    // Page turn within section
+    if (newPage.sectionId === currentPage.sectionId) {
+      // Don't update URL, just turn page
+      turnToPage(newPage);
+    } else {
+      // Entering new section, update URL
+      window.history.pushState(...);
+      turnToPage(newPage);
+    }
+    ```
+  - Handle browser back/forward with section context
+  - Navigate to first page of section from URL
+
+- [ ] **3.5.7 Bookmark Integration** ⚠️ REQUIRED
+  - One bookmark per section (not per physical page)
+  - Bookmark shows section title
+  - Clicking bookmark navigates to section's first page
+  - Bookmark active state for all pages in section
+  - Update bookmark positioning logic
+
+- [ ] **3.5.8 Navigation Button Behavior** ⚠️ REQUIRED
+  - Next/Previous buttons work across sections
+  - Moving from last page of section A to first page of section B:
+    - Updates URL from `/section-a` to `/section-b`
+    - Visual page turn animation
+    - Updates bookmark active state
+  - Within section navigation:
+    - No URL change
+    - Page turn animation
+    - Same bookmark remains active
+
+### Implementation Strategy:
+1. Start with a simple section (About) as proof of concept
+2. Implement content measurement and pagination
+3. Test with varying content lengths
+4. Extend to all sections
+5. Optimize performance (memoization, virtualization if needed)
+
+### Performance Considerations:
+- Measure content height once, cache result
+- Re-measure only on window resize or content change
+- Use React.memo for page components
+- Consider lazy loading for multi-page sections
+- Optimize re-renders during page turns
+
+---
+
+## Phase 4: Section Implementation - Cover & About ⚠️ NEEDS UPDATE
+**Goal**: Implement the book cover and "About" section with all content and styling. About section may span multiple physical pages based on content length.
 
 ### Tasks:
 - [x] **4.1 Book Cover Page** ✅ MIGRATED
@@ -148,27 +293,32 @@ This document breaks down the Persian Ancient Book-themed portfolio website into
   - Uses ImageWrapper component (migrated - standard img tag)
   - Set as root path (/)
 
-- [x] **4.2 "Who is he?" Page - Content** ✅
+- [ ] **4.2 "About" Section - Content** ⚠️ NEEDS UPDATE
   - Add grammatically correct bio content to dict.ts
   - Calculate years of experience dynamically (current year - 2018)
   - Add bold emphasis on "software engineer"
-  - Structure content into sections
+  - Structure content into subsections
+  - **Note**: Content may span 2-3 physical pages depending on length
+  - All pages in section show URL: `/about`
 
-- [x] **4.3 "Who is he?" Page - Layout** ✅
-  - Create "Who is he?" section with title
+- [ ] **4.3 "About" Section - Layout** ⚠️ NEEDS UPDATE
+  - Create "Who is he?" subsection with title
   - Add main bio paragraph
-  - Create "Which parts can he help you with?" section
+  - Create "Which parts can he help you with?" subsection
   - List all 5 help scenarios
+  - **Note**: If content exceeds page height, it continues on next physical page
+  - Implement content pagination for this section
 
-- [x] **4.4 "Who is he?" Page - CV Link** ✅
-  - Add CV link at bottom of page
+- [ ] **4.4 "About" Section - CV Link** ⚠️ NEEDS UPDATE
+  - Add CV link at bottom of section (may be on page 2 or 3)
   - Style link appropriately (Lapis Blue)
   - Ensure link opens in new tab
+  - Link appears on last physical page of About section
 
 ---
 
-## Phase 5: Skills Page Implementation ✅ COMPLETE
-**Goal**: Create interactive skills page with draggable logos organized by category.
+## Phase 5: Skills Section Implementation ⚠️ NEEDS UPDATE
+**Goal**: Create interactive skills section with draggable logos organized by category. Section may span multiple physical pages based on number of skills.
 
 ### Tasks:
 - [x] **5.1 Skills Data Structure** ✅
@@ -186,23 +336,28 @@ This document breaks down the Persian Ancient Book-themed portfolio website into
   - Provided download sources (Simple Icons, CDN)
   - Added quick download script examples
 
-- [x] **5.3 Skills Page Layout** ✅
+- [ ] **5.3 Skills Section Layout** ⚠️ NEEDS UPDATE
   - Created header explaining drag feature
   - Separated "Software engineering practices" at top (text only)
   - Grouped remaining skills by category
   - Styled with square containers, small border radius
+  - **Note**: With 55+ skills, section likely spans 2-3 physical pages
+  - URL remains `/skills` for all pages
+  - Implement content pagination to split categories across pages
 
-- [x] **5.4 Draggable Logos** ✅
+- [ ] **5.4 Draggable Logos** ⚠️ NEEDS UPDATE
   - Implemented HTML5 drag functionality
   - Made each logo draggable
   - Implemented return-to-place on release
   - Added pointer cursor on hover
   - Made titles clickable (link to docs)
+  - **Note**: Dragging should work across physical pages within Skills section
+  - Consider drag constraints within section boundaries
 
 ---
 
-## Phase 6: Projects Page Implementation ✅ COMPLETE
-**Goal**: Display open-source projects with descriptions and links.
+## Phase 6: Projects Section Implementation ⚠️ NEEDS UPDATE
+**Goal**: Display open-source projects with descriptions and links. Section automatically spans multiple pages if projects list is long.
 
 ### Tasks:
 - [x] **6.1 Projects Data Structure** ✅
@@ -218,16 +373,20 @@ This document breaks down the Persian Ancient Book-themed portfolio website into
   - Included: title, description, optional screenshot, links
   - Styled with Persian theme
 
-- [x] **6.3 Projects Page Layout** ✅
+- [ ] **6.3 Projects Section Layout** ⚠️ NEEDS UPDATE
   - Displayed projects in cards
   - Descriptions grammatically correct
   - Added proper spacing and typography
   - Made links clickable and styled
+  - **Note**: 5 projects with descriptions may span 2-3 physical pages
+  - URL remains `/projects` for all pages in section
+  - Implement content pagination to split projects across pages
+  - Keep each project card atomic (don't split mid-project)
 
 ---
 
-## Phase 7: Articles Page Implementation ✅ COMPLETE
-**Goal**: Create dynamic articles page fetching from dev.to API with pagination.
+## Phase 7: Articles Section Implementation ⚠️ NEEDS UPDATE
+**Goal**: Create dynamic articles section fetching from dev.to API. Section spans multiple pages based on article pagination (8 per view).
 
 ### Tasks:
 - [x] **7.1 Article Model Layer** ✅
@@ -249,11 +408,16 @@ This document breaks down the Persian Ancient Book-themed portfolio website into
   - Created error message UI
   - Implemented Pagination controls
 
-- [x] **7.4 Articles Page Assembly** ✅
-  - Assembled full articles page
+- [ ] **7.4 Articles Section Assembly** ⚠️ NEEDS UPDATE
+  - Assembled full articles section
   - Client-side fetching (React-based)
   - Made article rows clickable (open in new tab)
   - All states working (loading, error, success)
+  - **Note**: 8 articles per pagination page
+  - Each pagination page may span 1-2 physical pages depending on card heights
+  - URL remains `/articles` for all physical pages
+  - Pagination controls visible on all pages within section
+  - Clicking pagination should stay within `/articles` URL
 
 ---
 
