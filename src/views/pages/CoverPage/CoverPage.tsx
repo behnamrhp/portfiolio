@@ -30,7 +30,7 @@ const CoverPage: React.FC = () => {
         
         {/* Personal image */}
         <ImageWrapper
-          src="/assets/images/me.jpeg"
+          src="/assets/images/me.webp"
           alt="Behnam Rahimpour"
           style={{
             width: `${lageScreenWidth}px`,

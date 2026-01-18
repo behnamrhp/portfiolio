@@ -181,7 +181,7 @@ const BookContainer: React.FC<BookContainerProps> = ({
     if (index === 0 && !isMobileScreen) {
       return (
         <Page key="cover0"
-        pageNumber={0} className="page bg-[url('/assets/images/bg.png')] bg-contain page-cover page-cover-top hard font-garamond">
+        pageNumber={0} className="page bg-[url('/assets/images/bg.webp')] bg-contain page-cover page-cover-top hard font-garamond">
           <div className="page-content" />
         </Page>
       )
@@ -212,7 +212,7 @@ const BookContainer: React.FC<BookContainerProps> = ({
               <div style={{
                 height: bookSize.height,
                 width: bookSize.width,
-                backgroundImage: `url("/assets/images/cover.png")`,
+                backgroundImage: `url("/assets/images/cover.webp")`,
                 backgroundSize: '100% 100%',
                 backgroundPosition: '0 0',
                 backgroundRepeat: 'no-repeat',
