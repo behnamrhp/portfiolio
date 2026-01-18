@@ -2,7 +2,7 @@ import React from 'react';
 import { Heading, BodyText } from '../../atoms/Typography';
 import PageLayout from '../../organisms/PageLayout';
 import { dict, skills } from '@/input';
-import { SkillIcon } from '@/src/views/molecules';
+import { SkillIcon } from '@/views/molecules';
 
 /**
  * Skills Section - Page 1: Software Engineering Practices & Architectures

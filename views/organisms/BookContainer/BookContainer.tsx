@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import HTMLFlipBook from 'react-pageflip';
+import { BookContainerProps } from './BookContainer.types';
 import BookNavigation from '../BookNavigation';
 import BookBookmarks from '../BookBookmarks';
 import { getResponsivePageFlipConfig, getBookSizes, SIZE_CONFIG, isMobile } from '@/input';
-import { BookContainerProps } from '@/src/views';
 
 // Page component for react-pageflip that accepts ref
 // react-pageflip expects pages to be div elements with forwarded refs

@@ -1,6 +1,6 @@
 import React from 'react';
-import NavigationArrow from '@/src/views/molecules/NavigationArrow';
-import { useKeyboardNavigation } from '@/src/viewmodels';
+import NavigationArrow from '../../molecules/NavigationArrow';
+import { useKeyboardNavigation } from '@/viewmodels';
 
 interface BookNavigationProps {
   onNext: () => void;

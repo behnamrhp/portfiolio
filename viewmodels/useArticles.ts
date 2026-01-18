@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
-import { fetchArticles } from '@/src/models';
-import { Article } from '@/src/views/molecules/ArticleCard/ArticleCard.types';
+import { fetchArticles } from '@/models';
+import { Article } from '@/views/molecules/ArticleCard/ArticleCard.types';
 import { DEV_TO_USERNAME, ARTICLES_PER_PAGE } from '@/input/constants';
 
 interface UseArticlesState {
