@@ -10,12 +10,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   ...props
 }) => {
   const combinedClassName = `
-    border-2
+    border
     border-manuscript-ink
-    rounded-sm
     p-6
-    hover:shadow-lg
-    hover:border-manuscript-lapis
+    hover:bg-manuscript-ink
+    hover:bg-opacity-5
     transition-all
     duration-200
     bg-manuscript-paper
