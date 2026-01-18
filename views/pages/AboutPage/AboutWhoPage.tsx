@@ -58,7 +58,7 @@ His main philosophy about success in software teams is having <strong className=
               title="Connect on LinkedIn"
             >
               <img 
-                src="/assets/images/logos/linkedin.png" 
+                src="/assets/images/logos/linkedin.webp" 
                 alt="LinkedIn" 
                 className="w-10 h-10 object-contain group-hover:scale-110 transition-transform"
               />
@@ -76,7 +76,7 @@ His main philosophy about success in software teams is having <strong className=
               title="View GitHub Profile"
             >
               <img 
-                src="/assets/images/logos/github.png" 
+                src="/assets/images/logos/github.webp" 
                 alt="GitHub" 
                 className="w-10 h-10 object-contain group-hover:scale-110 transition-transform"
               />
@@ -92,7 +92,7 @@ His main philosophy about success in software teams is having <strong className=
               title="Send Email"
             >
               <img 
-                src="/assets/images/logos/gmail.png" 
+                src="/assets/images/logos/gmail.webp" 
                 alt="Email" 
                 className="w-10 h-10 object-contain group-hover:scale-110 transition-transform"
               />
@@ -110,7 +110,7 @@ His main philosophy about success in software teams is having <strong className=
               title="Message on Telegram"
             >
               <img 
-                src="/assets/images/logos/telegram.png" 
+                src="/assets/images/logos/telegram.webp" 
                 alt="Telegram" 
                 className="w-10 h-10 object-contain group-hover:scale-110 transition-transform"
               />

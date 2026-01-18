@@ -1,6 +1,6 @@
 // Constants used throughout the application
 
-export const CV_LINK = "https://example.com/path-to-cv.pdf"; // TODO: Update with actual CV link
+export const CV_LINK = import.meta.env.VITE_CV_URL || ""; // TODO: Update with actual CV link
 
 export const ARTICLE_API_KEY = import.meta.env.VITE_ARTICLE_API_KEY || "";
 

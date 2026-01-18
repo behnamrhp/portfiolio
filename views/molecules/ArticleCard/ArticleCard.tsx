@@ -40,7 +40,6 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
     ${className}
   `.trim();
   
-  console.log(article);
   return (
     <div
       className={combinedClassName}
