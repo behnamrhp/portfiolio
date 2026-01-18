@@ -8,22 +8,12 @@ const NavigationArrow: React.FC<NavigationArrowProps> = ({
   className = '',
   ...props
 }) => {
-  const positionClasses = {
-    left: 'left-4',
-    right: 'right-4',
-  };
-  
   const rotationClasses = {
     left: 'rotate-180',
     right: '',
   };
   
   const combinedClassName = `
-    absolute
-    top-1/2
-    transform
-    -translate-y-1/2
-    ${positionClasses[direction]}
     p-3
     bg-manuscript-paper
     border-2
@@ -37,14 +27,19 @@ const NavigationArrow: React.FC<NavigationArrowProps> = ({
     disabled:cursor-not-allowed
     disabled:hover:bg-manuscript-paper
     disabled:hover:text-manuscript-ink
-    z-10
     ${className}
   `.trim();
   
+  const handleClick = () => {
+    if (onClick) {
+      onClick();
+    }
+  };
+
   return (
     <button
       className={combinedClassName}
-      onClick={onClick}
+      onClick={handleClick}
       disabled={disabled}
       aria-label={`Navigate ${direction}`}
       {...props}

@@ -1,12 +1,14 @@
 // Constants used throughout the application
 
+import { isMobile } from "@/input/turnConfig";
+
 export const CV_LINK = import.meta.env.VITE_CV_URL || ""; // TODO: Update with actual CV link
 
 export const ARTICLE_API_KEY = import.meta.env.VITE_ARTICLE_API_KEY || "";
 
 export const DEV_TO_USERNAME = "behnamrhp"; // Update with actual dev.to username
 
-export const ARTICLES_PER_PAGE = 4;
+export const ARTICLES_PER_PAGE = isMobile() ? 2 : 4;
 
 // Page routes
 export const ROUTES = {

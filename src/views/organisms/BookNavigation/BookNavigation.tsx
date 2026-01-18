@@ -49,4 +49,3 @@ const BookNavigation: React.FC<BookNavigationProps> = ({
 };
 
 export default BookNavigation;
-
