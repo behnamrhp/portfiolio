@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { BookContainer } from '@/views/organisms';
+import { BookContainer } from '@/src/views/organisms';
 import { 
   sections, 
   flattenSections, 

@@ -1,5 +1,5 @@
 import React from 'react';
-import NavigationArrow from '@/src/views/molecules/NavigationArrow';
+import NavigationArrow from '../../molecules/NavigationArrow';
 import { useKeyboardNavigation } from '@/src/viewmodels';
 
 interface BookNavigationProps {

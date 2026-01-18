@@ -8,7 +8,7 @@ import {
   SkillsStackPage,
   ProjectsPage,
   LazyArticlesPage,
-} from '@/views/pages';
+} from '@/src/views/pages';
 import { ROUTES } from '@/input/constants';
 import { isMobile } from '@/input/turnConfig';
 

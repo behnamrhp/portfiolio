@@ -7,7 +7,7 @@ import ArticleCard from '../../molecules/ArticleCard';
 import Pagination from '../../molecules/Pagination';
 import PageLayout from '../../organisms/PageLayout';
 import { dict } from '@/input';
-import { useArticles } from '@/viewmodels';
+import { useArticles } from '@/src/viewmodels';
 
 interface ArticlesPageProps {
   shouldLoad?: boolean;

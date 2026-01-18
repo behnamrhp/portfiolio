@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Bookmark from '@/src/views/molecules/Bookmark';
+import Bookmark from '../../molecules/Bookmark';
 import { isMobile } from '@/input';
 
 interface BookBookmarksProps {

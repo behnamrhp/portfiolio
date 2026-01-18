@@ -1,4 +1,4 @@
-import { Article } from '@/views/molecules/ArticleCard/ArticleCard.types';
+import { Article } from '@/src/views/molecules/ArticleCard/ArticleCard.types';
 
 export interface FetchArticlesParams {
   username?: string;
