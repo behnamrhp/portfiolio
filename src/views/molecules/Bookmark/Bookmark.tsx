@@ -47,7 +47,7 @@ const Bookmark: React.FC<BookmarkProps> = ({
   
   return (
     <button
-      className={combinedClassName + " rotate-180 h-[62px]  rounded-sm shadow-2xl shadow-black border-none max-h-fit"}
+      className={combinedClassName + " rotate-180 h-[62px]  rounded-sm shadow-2xl shadow-black border-none"}
       style={bookmarkStyle}
       onClick={onClick}
       tabIndex={0}
