@@ -24,7 +24,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   return (
     <div className={combinedClassName} {...props}>
       {/* Project Title */}
-      <Heading level="h4" className="mb-3">
+      <Heading level="h5" className="mb-3">
         {project.title}
       </Heading>
       

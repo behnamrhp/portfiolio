@@ -36,7 +36,7 @@ export const getBookSizes = (): { width: number, height: number } => {
     };
   }
 
-  const width = Math.min(window.innerWidth * SIZE_CONFIG.DESKTOP_WIDTH_MULTIPLIER, window.innerWidth * 0.4);
+  const width = Math.min(window.innerWidth * SIZE_CONFIG.DESKTOP_WIDTH_MULTIPLIER, window.innerWidth * 0.36);
   return { 
     width,
     height: Math.min(width * ratio, window.innerHeight * 0.85)

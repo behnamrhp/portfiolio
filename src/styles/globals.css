@@ -58,6 +58,32 @@ html {
   }
 }
 
+/* Global scrollbar styles for all browsers */
+* {
+  /* Firefox scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #1F1B17 #EFE3C6; /* thumb track */
+}
+
+/* Chrome, Edge, Safari scrollbar */
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #EFE3C6; /* manuscript-paper */
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #1F1B17; /* manuscript-ink */
+  border-radius: 2px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #1F4E79; /* manuscript-lapis */
+}
+
 /* Custom utility classes */
 @layer utilities {
   /* Line clamping utilities */
@@ -82,22 +108,29 @@ html {
     overflow: hidden;
   }
   
-  /* Custom scrollbar for book content */
+  /* Custom scrollbar utility class for book content */
+  .scrollbar-manuscript {
+    /* Firefox scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: #1F1B17 #EFE3C6; /* thumb track */
+  }
+  
   .scrollbar-manuscript::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
   }
   
   .scrollbar-manuscript::-webkit-scrollbar-track {
-    background: #EFE3C6;
+    background: #EFE3C6; /* manuscript-paper */
   }
   
   .scrollbar-manuscript::-webkit-scrollbar-thumb {
-    background: #1F1B17;
+    background: #1F1B17; /* manuscript-ink */
     border-radius: 2px;
   }
   
   .scrollbar-manuscript::-webkit-scrollbar-thumb:hover {
-    background: #1F4E79;
+    background: #1F4E79; /* manuscript-lapis */
   }
 }
 

@@ -73,7 +73,7 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ shouldLoad = true }) => {
         {/* Articles List */}
         {!loading && !error && articles.length > 0 && (
           <>
-            <div className="space-y-4">
+            <div className="space-y-3">
               {articles.map((article) => (
                 <ArticleCard key={article.id} article={article} />
               ))}
@@ -81,7 +81,7 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ shouldLoad = true }) => {
             
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex justify-center pt-6">
+              <div className="flex justify-center ">
                 <Pagination
                   currentPage={currentPage}
                   totalPages={totalPages}
