@@ -17,7 +17,7 @@ export default defineConfig({
   // For GitHub Pages deployment
   // If deploying to https://<USERNAME>.github.io/<REPO>/, set base to '/<REPO>/'
   // If deploying to custom domain or https://<USERNAME>.github.io/, set base to '/'
-  base: process.env.GITHUB_PAGES ? '/portfiolio/' : '/',
+  base: '/',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
