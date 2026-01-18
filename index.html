@@ -9,6 +9,15 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const redirect = params.get("redirect");
+
+      if (redirect) {
+        window.history.replaceState(null, "", redirect);
+      }
+    </script>
+
     <script type="module" src="/src/index.tsx"></script>
   </body>
 </html>
